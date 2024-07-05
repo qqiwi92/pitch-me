@@ -1,33 +1,82 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 290 45% 99%;
+    --foreground: 0 0% 10.2%;
+    --muted: 210 13.95% 83.14%;
+    --muted-foreground: 0 0% 10.2%;
+    --popover: 290 45% 98%;
+    --popover-foreground: 290 55% 4%;
+    --card: 290 100% 93.2%;
+    --card-foreground: 290 55% 4%;
+    --border: 220 7.32% 91.96%;
+    --input: 210 13.95% 83.14%;
+    --primary: 314.72 100% 73.9%;
+    --primary-foreground: 290 98% 1%;
+    --secondary: 206.04 100% 63.38%;
+    --secondary-foreground: 0 0% 0%;
+    --accent: 219.62 100% 84.43%;
+    --accent-foreground: 170 98% 1%;
+    --destructive: 0 100% 37.65%;
+    --destructive-foreground: 15 0% 100%;
+    --ring: 219.79 74.8% 75.1%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 290 50% 0%;
+    --foreground: 290 31% 97%;
+    --muted: 50 38% 8%;
+    --muted-foreground: 50 8% 71%;
+    --popover: 0 0% 1%;
+    --popover-foreground: 290 31% 98%;
+    --card: 0 0% 1%;
+    --card-foreground: 290 31% 98%;
+    --border: 290 15% 11%;
+    --input: 290 15% 11%;
+    --primary: 290 100% 74.78%;
+    --primary-foreground: 290 0% 0%;
+    --secondary: 50 100% 78.73%;
+    --secondary-foreground: 50 98% 1%;
+    --accent: 196.98 100% 74.34%;
+    --accent-foreground: 170 98% 1%;
+    --destructive: 360 100% 65.13%;
+    --destructive-foreground: 0 0% 0%;
+    --ring: 290 98% 61%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+.remove-scrollbar {
+  /* Maintain scroll functionality */
+  overflow-y: auto; /* Adjust as needed for your layout */
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* For WebKit-based browsers */
+.remove-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Edge and IE */
+.remove-scrollbar {
+  -ms-overflow-style: none;
+}
+
+/* For Firefox */
+.remove-scrollbar {
+  scrollbar-width: none;
+}
+#rich * {
+  line-height: 0.1;
 }
