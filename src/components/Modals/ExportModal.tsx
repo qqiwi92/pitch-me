@@ -24,6 +24,8 @@ interface IModal {
 export default function ExportModal({ OpenButton, list }: IModal) {
   const [open, setOpen] = useState(false);
   const Trigger = OpenButton();
+  const [activeTab, setActiveTab] = useState(0);
+  const [loading, setLoading] = useState(false);
   const tabs = [
     {
       id: 0,
@@ -42,15 +44,20 @@ export default function ExportModal({ OpenButton, list }: IModal) {
               copy
             </Button>
             <Button
-              onClick={() => {
+              loading={loading}
+              onClick={async () => {
+                setLoading(true);
                 const blob = new Blob([JSON.stringify(list, null, 2)], {
                   type: "application/json",
                 });
+
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.href = url;
                 link.download = "data.json";
                 link.click();
+                URL.revokeObjectURL(url);
+                setLoading(false);
               }}
             >
               download
@@ -64,7 +71,16 @@ export default function ExportModal({ OpenButton, list }: IModal) {
       label: "pptx",
       content: (
         <div className="flex w-full flex-col items-center gap-3 rounded-lg p-4">
-          <Button onClick={() => downloadPptx(list)}>download pptx</Button>
+          <Button
+            loading={loading}
+            onClick={async () => {
+              setLoading(true);
+              await downloadPptx(list);
+              setLoading(false);
+            }}
+          >
+            download pptx
+          </Button>
         </div>
       ),
     },
@@ -75,7 +91,7 @@ export default function ExportModal({ OpenButton, list }: IModal) {
         className={`fixed inset-0 z-[99] ${
           open ? "pointer-events-auto backdrop-blur-lg" : "backdrop-blur-none"
         } pointer-events-none transition duration-500`}
-      ></div> 
+      ></div>
       <Credenza open={open} onOpenChange={setOpen}>
         <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
         <CredenzaContent className="z-[100]">
@@ -86,7 +102,11 @@ export default function ExportModal({ OpenButton, list }: IModal) {
             </CredenzaDescription>
           </CredenzaHeader>
           <CredenzaBody>
-            <DirectionAwareTabs tabs={tabs} />
+            <DirectionAwareTabs
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              tabs={tabs}
+            />
           </CredenzaBody>
           <CredenzaFooter>
             <CredenzaClose asChild>
@@ -129,16 +149,19 @@ const downloadPptx = (list: Value[]) => {
                 y: 1,
                 w: 8,
                 h: 1,
-                fontSize: 72,
+                fontSize: 36,
                 fontFace: "Montserrat",
                 bold: true,
               }}
             >
               {slide.title}
             </Text>
-            <Text style={{ x: 3.73, y: 3, w: 3, h: 0.5, fontSize: 32 }}>
+            <Text style={{ x: 3.73, y: 3, w: 3, h: 0.5, fontSize: 18 }}>
               {slide.bulletPoints.map((p) => (
-                <Text.Bullet style={{ margin: 10 }}> {p.text} </Text.Bullet>
+                <Text.Bullet key={p.text} style={{ margin: 10 }}>
+                  {" "}
+                  {p.text}{" "}
+                </Text.Bullet>
               ))}
             </Text>
           </Slide>

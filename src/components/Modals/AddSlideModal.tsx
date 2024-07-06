@@ -123,14 +123,14 @@ export default function AddSlideModal({
         ...prev.slice(openedSlide + 1),
       ]);
     }
-  }, [value]);
+  }, [value, openedSlide]);
   useEffect(() => {
     if (openedSlide === -1) {
       setValue(newValue);
     } else if (openedSlide > -1) {
       setValue(list[openedSlide]);
     }
-  }, [openedSlide]);
+  }, [openedSlide, newValue, list]);
   return (
     <>
       <div
@@ -178,6 +178,9 @@ export default function AddSlideModal({
                           id="title"
                           value={value.title}
                           required
+                          onLoad={(e) => {
+                            field.onChange({ target: { value: value.title } });
+                          }}
                           onChange={(e) => {
                             field.onChange(e);
                             setValue({ ...value, title: e.target.value });
@@ -276,6 +279,9 @@ function SelectStrings({
   const [newItem, setNewItem] = useState("");
   const container = useRef<HTMLDivElement | null>(null);
   const listItems = strings || [];
+  useEffect(() => {
+    field.onChange({ target: { value: listItems } });
+  }, [field, listItems]);
   const addNew = () => {
     if (newItem.trim() === "") return;
     field.onChange({ target: { value: listItems } });
@@ -302,7 +308,7 @@ function SelectStrings({
         >
           {listItems.map((string, i) => (
             <Reorder.Item
-              className="bg-opacityListGradient cursor-pointer rounded-xl px-1 backdrop-blur"
+              className="cursor-pointer rounded-xl bg-opacityListGradient px-1 backdrop-blur"
               key={string.id}
               value={string}
               dragConstraints={container}

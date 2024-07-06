@@ -55,8 +55,10 @@ export default function List({
                 );
               })}
             </ul>
+
+            <Separator className="my-3 bg-foreground/5" />
             <div
-              className="prose prose-stone flex flex-col items-center justify-center leading-[0] text-foreground prose-img:rounded-xl"
+              className="prose prose-stone flex flex-col items-center justify-center leading-[1.2] text-foreground/80 prose-img:rounded-xl"
               dangerouslySetInnerHTML={{ __html: cleanHtml }}
             ></div>
           </div>

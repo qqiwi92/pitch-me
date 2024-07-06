@@ -10,8 +10,8 @@ const ShortcutKey = ({ className, keys, withBg, ...props }: ShortcutKeyProps) =>
   return (
     <span className={cn('text-xs tracking-widest opacity-60', className)} {...props}>
       <span
-        className={cn('ml-4', {
-          'self-end rounded bg-accent p-1 leading-3': withBg
+        className={cn('ml-4 ', {
+          'self-end rounded bg-background text-foreground border p-1 leading-3': withBg
         })}
       >
         {getShortcutKeys(keys)}

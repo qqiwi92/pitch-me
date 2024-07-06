@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toast/toaster";
+import Providers from "@/components/utills/Providers";
 
 const montserrat = Montserrat({ subsets: ["latin", "cyrillic"] });
 
@@ -17,12 +19,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className + " dark"}>
-        <div
-          vaul-drawer-wrapper=""
-          className="mx-auto max-w-6xl bg-background px-3 text-foreground"
-        >
-          {children}
-        </div>
+        <Providers>
+          <div
+            vaul-drawer-wrapper=""
+            className="mx-auto max-w-6xl bg-background px-3 text-foreground"
+          >
+            {children}
+          </div>
+        </Providers>
+        <Toaster />
       </body>
     </html>
   );

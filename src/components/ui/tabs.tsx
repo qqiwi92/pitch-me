@@ -13,6 +13,8 @@ type Tab = {
 };
 
 interface OgImageSectionProps {
+  activeTab: number;
+  setActiveTab: React.Dispatch<React.SetStateAction<number>>;
   tabs: Tab[];
   className?: string;
   onChange?: () => void;
@@ -21,9 +23,10 @@ interface OgImageSectionProps {
 function DirectionAwareTabs({
   tabs,
   className,
+  activeTab,
+  setActiveTab,
   onChange,
 }: OgImageSectionProps) {
-  const [activeTab, setActiveTab] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [ref, bounds] = useMeasure();
