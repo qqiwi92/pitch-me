@@ -229,7 +229,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
             className={`remove-scrollbar ${aiInput.length > 32 ? "h-[35vh]" : "h-[20vh]"}`}
             placeholder="So I want to pitch investors this million dollar idea..."
           />
-          <div className="remove-scrollbar flex max-w-sm gap-2 overflow-x-auto">
+          <div className="remove-scrollbar flex max-w-xs sm:max-w-sm gap-2 overflow-x-auto">
             {examples.map((example) => {
               return (
                 <Button
