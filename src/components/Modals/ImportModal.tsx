@@ -226,7 +226,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
               setValidated(false);
               setAiInput(e.target.value);
             }}
-            className={`remove-scrollbar ${aiInput.length > 32 ? "h-[40vh]" : "h-[20vh]"}`}
+            className={`remove-scrollbar ${aiInput.length > 32 ? "h-[35vh]" : "h-[20vh]"}`}
             placeholder="So I want to pitch investors this million dollar idea..."
           />
           <div className="remove-scrollbar flex max-w-sm gap-2 overflow-x-auto">
@@ -235,7 +235,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
                 <Button
                   key={example.title}
                   variant="outline"
-                  className="mt-[1px] flex h-fit select-none flex-nowrap border-secondary py-0.5 text-sm hover:border-transparent hover:bg-foreground"
+                  className="my-[1px] flex h-fit select-none flex-nowrap border-secondary py-0.5 text-sm hover:border-transparent hover:bg-foreground"
                   onClick={() => {
                     setValidated(false);
                     setAiInput(example.description);
@@ -291,7 +291,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
               tabs={tabs}
             />
           </CredenzaBody>
-          <CredenzaFooter>
+          <CredenzaFooter className="flex">
             <CredenzaClose asChild>
               <motion.div layout>
                 <Button variant="destructive">

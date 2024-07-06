@@ -10,7 +10,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import type { ControllerRenderProps } from "react-hook-form";
+import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import {
   Credenza,
   CredenzaBody,
@@ -87,7 +87,7 @@ export default function AddSlideModal({
       title: "",
     },
   });
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     setValue({ ...values, richEditor: values.richEditor ?? "" });
     setItems((prev) => [...prev, value]);
     setValue({
@@ -107,6 +107,7 @@ export default function AddSlideModal({
     richEditor: "",
     bulletPoints: [],
   });
+
   useEffect(() => {
     if (openedSlide === -1) {
       setNewValue(
@@ -130,7 +131,7 @@ export default function AddSlideModal({
     } else if (openedSlide > -1) {
       setValue(list[openedSlide]);
     }
-  }, [openedSlide, newValue, list]);
+  }, [openedSlide]);
   return (
     <>
       <div
@@ -165,36 +166,16 @@ export default function AddSlideModal({
                 <FormField
                   name="title"
                   control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="title" className="text-lg font-bold">
-                        Title
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="text"
-                          name="title"
-                          id="title"
-                          value={value.title}
-                          required
-                          onLoad={(e) => {
-                            field.onChange({ target: { value: value.title } });
-                          }}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            setValue({ ...value, title: e.target.value });
-                          }}
-                          className={cn("w-full", {
-                            "border-destructive focus-within:border-destructive":
-                              form.formState.errors.title,
-                          })}
-                          placeholder="Slide title"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    return (
+                      <TitleInput
+                        field={field}
+                        value={value}
+                        form={form}
+                        setValue={setValue}
+                      />
+                    );
+                  }}
                 />
                 <FormField
                   name="bulletPoints"
@@ -260,6 +241,66 @@ export default function AddSlideModal({
   );
 }
 
+interface TitleInputProps {
+  field: ControllerRenderProps<
+    {
+      title: string;
+      bulletPoints: {
+        id: string;
+        text: string;
+      }[];
+      richEditor?: string | undefined;
+    },
+    "title"
+  >;
+  value: Value;
+  setValue: (value: Value) => void;
+  form: UseFormReturn<
+    {
+      title: string;
+      bulletPoints: {
+        id: string;
+        text: string;
+      }[];
+      richEditor?: string | undefined;
+    },
+    any,
+    undefined
+  >;
+}
+function TitleInput({ field, value, form, setValue }: TitleInputProps) {
+  useEffect(() => {
+    field.onChange({ target: { value: value.title } });
+  }, []);
+  return (
+    <FormItem>
+      <FormLabel htmlFor="title" className="text-lg font-bold">
+        Title
+      </FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          type="text"
+          name="title"
+          id="title"
+          value={value.title}
+          required
+          onChange={(e) => {
+            field.onChange(e);
+            setValue({ ...value, title: e.target.value });
+          }}
+          className={cn("w-full", {
+            "border-destructive focus-within:border-destructive":
+              form.formState.errors.title,
+          })}
+          placeholder="Slide title"
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  );
+}
+
 function SelectStrings({
   setValue,
   strings,
@@ -281,7 +322,7 @@ function SelectStrings({
   const listItems = strings || [];
   useEffect(() => {
     field.onChange({ target: { value: listItems } });
-  }, [field, listItems]);
+  }, []);
   const addNew = () => {
     if (newItem.trim() === "") return;
     field.onChange({ target: { value: listItems } });
@@ -381,6 +422,7 @@ function SelectStrings({
         />
         <Button
           onClick={addNew}
+          layout={false}
           variant="ringHover"
           className="box-border py-0 leading-tight"
         >
