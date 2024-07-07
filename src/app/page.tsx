@@ -8,7 +8,7 @@ import { CiCirclePlus, CiExport, CiImport } from "react-icons/ci";
 import AddSlideModal from "@/components/Modals/AddSlideModal";
 import ImportModal from "@/components/Modals/ImportModal";
 import ExportModal from "@/components/Modals/ExportModal";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Header from "@/components/ui/header";
 export default function Home() {
   // ! -2 means not open, -1 creating a file, other means index of edited
@@ -68,6 +68,7 @@ function OpenAddSlideButton({
 }) {
   return (
     <Button
+    id="newSlideButton"
       onClick={() => setOpenedSlide(-1)}
       tooltip="Create a new slide"
       className="z-10 flex flex-col"
@@ -79,7 +80,7 @@ function OpenAddSlideButton({
 }
 function OpenImportButton() {
   return (
-    <Button tooltip="Import" className="z-10 flex flex-col" variant={"ghost"}>
+    <Button id="importButton" tooltip="Import" className="z-10 flex flex-col" variant={"ghost"}>
       <CiImport className="stroke-[1px] text-2xl" />
     </Button>
   );
@@ -91,3 +92,4 @@ function OpenExportButton() {
     </Button>
   );
 }
+

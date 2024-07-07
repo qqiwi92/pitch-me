@@ -39,7 +39,7 @@ export default function List({
               We didn&apos;t find any data.
             </span>
             <span className="text-foreground/50">
-              You can create a new data list either in import page of create
+              You can create a new data list either in <ClickButtonById id="importButton">import </ClickButtonById>  page of <ClickButtonById id="newSlideButton"> create </ClickButtonById>
               page
             </span>
           </div>
@@ -118,4 +118,26 @@ function ListSkeleton() {
       })}
     </div>
   );
+}
+
+
+
+function ClickButtonById({children,id}:{id: string, children:React.ReactNode}){
+  const handleClick = () => {
+    const button = document.getElementById(id);
+    if (button) {
+        const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+        button.dispatchEvent(clickEvent);
+    }
+}
+
+  return (
+    <span className="text-primary cursor-pointer" onClick={handleClick}>
+      {children}
+    </span>
+  )
 }

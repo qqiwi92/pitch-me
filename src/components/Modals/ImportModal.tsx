@@ -19,9 +19,11 @@ import { DirectionAwareTabs } from "../ui/tabs";
 import { AImportStatus, validateJsonOnValueType, Value } from "@/lib/types";
 import { motion } from "framer-motion";
 import { useToast } from "../ui/toast/use-toast";
+import { examples } from "@/lib/data/examples";
 import { Textarea } from "../ui/textarea";
 import generateSchema from "@/lib/generateSchema";
 import { useMutation } from "@tanstack/react-query";
+import useLocalStorageState from "use-local-storage-state";
 interface IModal {
   OpenButton: () => ReactElement;
   list: Value[];
@@ -29,25 +31,33 @@ interface IModal {
 }
 
 export default function ImportModal({ OpenButton, list, setList }: IModal) {
+  // state
   const [open, setOpen] = useState(false);
   const Trigger = OpenButton();
+  const [activeTab, setActiveTab] = useState(0);
   const [validated, setValidated] = useState(false);
-  const [fileContent, setFileContent] = useState<string | null>(null);
-  const [aiInput, setAiInput] = useState("");
+  const [fileContent, setFileContent] = useLocalStorageState('importJson', {defaultValue: ""});
+  const [aiInput, setAiInput] = useLocalStorageState('aiInput', {defaultValue:""});
+  const { toast } = useToast();
   const {
     mutate: server_generateSchema,
     isPending,
-    data,
-    isError,
   } = useMutation({
     mutationFn: async () => {
       const response = await generateSchema(aiInput);
-      console.log(response);
-      if (response.status === "success") setAiInput(response.message);
+      if (response.status === "error") {
+        console.log('error');
+        server_generateSchema()
+      }
+      if (response.status === "success") {
+        setFileContent(response.message)
+        setActiveTab(0)
+        setValidated(true)
+      };
       return response;
     },
   });
-  const { toast } = useToast();
+  // functions
   function validateJSONSave() {
     if (!validated) {
       if (activeTab === tabs.find((t) => t.label === "json")?.id) {
@@ -148,28 +158,6 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
       console.error("Please upload a valid JSON file");
     }
   };
-  const examples = [
-    {
-      title: "Volunteer Match",
-      description:
-        "A platform that connects local volunteers with community projects needing assistance. Volunteers can search for nearby opportunities, sign up for events, and track their hours. Non-profits can post their project needs, manage volunteers, and provide updates on their impact. The app also includes a reward system to incentivize and recognize volunteers for their contributions.",
-    },
-    {
-      title: "Meal Planner Pro",
-      description:
-        "This app simplifies meal planning and grocery shopping by allowing users to plan their meals for the week, generate detailed shopping lists, and discover new recipes tailored to their dietary preferences. It offers integration with local grocery stores for easy online ordering and delivery. Users can also set dietary goals, track nutritional intake, and receive personalized meal recommendations.",
-    },
-    {
-      title: "Freelance Hub",
-      description:
-        "A comprehensive platform designed to streamline collaboration between freelancers and clients. Freelancers can create detailed profiles, showcase their portfolios, and find relevant job postings. Clients can post projects, set deadlines, track progress, and communicate with freelancers in real-time. The app also includes secure payment processing, project management tools, and performance analytics to ensure transparency and efficiency.",
-    },
-    {
-      title: "Fitness Buddy",
-      description:
-        "An app that connects fitness enthusiasts with personal trainers and workout buddies. Users can find trainers based on their fitness goals, book sessions, and track their progress. The app also allows users to find workout partners with similar goals and schedules. Features include personalized workout plans, progress tracking, and a community forum for motivation and support.",
-    },
-  ];
 
   const tabs = [
     {
@@ -226,7 +214,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
               setValidated(false);
               setAiInput(e.target.value);
             }}
-            className={`remove-scrollbar ${aiInput.length > 32 ? "h-[35vh]" : "h-[20vh]"}`}
+            className={`remove-scrollbar ${aiInput.length > 128 ? "h-[35vh]" : "h-[20vh]"}`}
             placeholder="So I want to pitch investors this million dollar idea..."
           />
           <div className="remove-scrollbar flex max-w-xs sm:max-w-sm gap-2 overflow-x-auto">
@@ -256,7 +244,10 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
             loading={isPending}
             variant={"outline"}
           >
-            Generate scheme with
+          {
+            isPending ? "Generating " : "Generate "
+          }
+             scheme with
             <span className="ml-1 font-bold text-primary transition-colors group-hover:text-background">
               {" "}
               AI
@@ -266,7 +257,6 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
       ),
     },
   ];
-  const [activeTab, setActiveTab] = useState(0);
 
   return (
     <>
