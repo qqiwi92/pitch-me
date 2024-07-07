@@ -101,12 +101,13 @@ export default function AddSlideModal({
     openedSlide: openedSlide,
     setOpenedSlide: setOpenedSlide,
   });
-
   const [value, setValue] = useState<Value>({
     title: "",
     richEditor: "",
     bulletPoints: [],
   });
+
+
 
   useEffect(() => {
     if (openedSlide === -1) {
@@ -114,7 +115,7 @@ export default function AddSlideModal({
         value ?? {
           title: "",
           richEditor: "",
-          bulletPoints: [],
+          bulletPoints: []
         },
       );
     } else if (openedSlide > -1) {
@@ -124,7 +125,7 @@ export default function AddSlideModal({
         ...prev.slice(openedSlide + 1),
       ]);
     }
-  }, [value, openedSlide]);
+  }, [value]);
   useEffect(() => {
     if (openedSlide === -1) {
       setValue(newValue);
@@ -150,7 +151,7 @@ export default function AddSlideModal({
         <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
         <CredenzaContent className="z-[50]">
           <CredenzaHeader>
-            <CredenzaTitle>Slide creation</CredenzaTitle>
+            <CredenzaTitle>{openedSlide === -1? "Slide creation":"Edit slide"}</CredenzaTitle>
             <CredenzaDescription>
               To create a slide please fill out those forms
             </CredenzaDescription>
