@@ -201,7 +201,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
       id: 1,
       label: "✨ generate from text",
       content: (
-        <div className="flex w-full flex-col items-center gap-3 overflow-hidden rounded-lg p-4">
+        <div className="flex w-full flex-col items-center gap-3 overflow-hidden rounded-lg">
           <p>
             ⚠️ Note that this feature is{" "}
             <span className="font-bold text-primary"> experimental</span> and is
@@ -217,7 +217,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
             className={`remove-scrollbar ${aiInput.length > 128 ? "h-[35vh]" : "h-[20vh]"}`}
             placeholder="So I want to pitch investors this million dollar idea..."
           />
-          <div className="remove-scrollbar flex max-w-xs sm:max-w-sm gap-2 overflow-x-auto">
+          <div className="remove-scrollbar flex max-w-[100%] gap-2 overflow-x-auto">
             {examples.map((example) => {
               return (
                 <Button
@@ -294,7 +294,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
                 className={`${validated ? "bg-accent hover:bg-accent/90" : "bg-primary hover:bg-primary/90"} select-none transition`}
                 onClick={() => validateJSONSave()}
               >
-                {validated ? "Save" : "Validate"}
+                {validated ? "Apply" : "Validate"}
               </Button>
             </motion.div>
           </CredenzaFooter>

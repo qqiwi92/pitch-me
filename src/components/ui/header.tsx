@@ -19,7 +19,7 @@ export default function Header() {
 
   const textSizeRem = useMotionTemplate`${textSize}rem`;
   return (
-    <div className="bg-opacity-radial-gradient fixed left-1/2 top-2 z-[100] w-fit -translate-x-1/2 rounded-xl px-4 backdrop-blur-xl">
+    <div className="bg-opacity-radial-gradient fixed left-1/2 top-2 z-[10] w-fit -translate-x-1/2 rounded-xl px-4 backdrop-blur-xl">
       <motion.h1
         style={{
           fontSize: textSizeRem,

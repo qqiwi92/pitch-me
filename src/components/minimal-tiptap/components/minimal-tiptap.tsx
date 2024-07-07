@@ -121,7 +121,7 @@ const MinimalTiptapEditor = forwardRef<HTMLDivElement, MinimalTiptapProps>(
           </>
         )}
         <div
-          className="h-full grow"
+          className="h-full grow max-h-[20vh] overflow-auto"
           onClick={() => editor?.chain().focus().run()}
         >
           <EditorContent editor={editor} className={cn("p-5", contentClass)} />

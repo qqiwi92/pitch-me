@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
+
 import {
   Credenza,
   CredenzaBody,
@@ -208,7 +209,7 @@ export default function AddSlideModal({
                   <MinimalTiptapEditor
                     id="rich"
                     value={value.richEditor}
-                    className="my-2"
+                    className="my-2 "
                     onValueChange={(e) =>
                       setValue({ ...value, richEditor: e.toString() })
                     }
@@ -329,7 +330,7 @@ function SelectStrings({
     field.onChange({ target: { value: listItems } });
     setValue((prevState) => ({
       ...prevState,
-      bulletPoints: [...listItems, { id: crypto.randomUUID(), text: newItem }],
+      bulletPoints: [...listItems, { id: String(listItems.length+1), text: newItem }],
     }));
     setNewItem("");
   };
@@ -393,7 +394,7 @@ function SelectStrings({
                           ],
                         }));
                       }}
-                      className="w-full max-w-[100px] select-none bg-transparent focus:outline-none focus:ring-0"
+                      className="w-full max-w-[200px] select-none bg-transparent focus:outline-none focus:ring-0"
                     />
                   </span>
                   {i !== listItems.length - 1 && (
