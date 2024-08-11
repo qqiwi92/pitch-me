@@ -8,6 +8,9 @@ import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { motion } from "framer-motion";
 import { Skeleton } from "../skeleton";
 import { Suspense, useEffect, useState } from "react";
+import AnimatedGradientText from "@/components/animated-gradinent-text";
+import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
 
 interface IList {
   items: Value[];
@@ -29,20 +32,44 @@ export default function List({
   return (
     <Suspense fallback={<ListSkeleton />}>
       <div className="remove-scrollbar flex w-full max-w-xl flex-col gap-5">
-        {!loaded && (
-          <ListSkeleton/>
-        )}
+        {!loaded && <ListSkeleton />}
         {items.length === 0 && loaded && (
-          <div className="mx-auto flex w-fit max-w-sm flex-col justify-center">
-            <span className="">
-              <TbFileSad className="text-5xl" />
-              We didn&apos;t find any data.
-            </span>
-            <span className="text-foreground/50">
-              You can create a new data list either in <ClickButtonById id="importButton">import </ClickButtonById>  page of <ClickButtonById id="newSlideButton"> create </ClickButtonById>
-              page
-            </span>
-          </div>
+          <>
+            <div
+              id="newSlideButton"
+              className="fixed left-1/2 top-32 w-full -translate-x-1/2 cursor-pointer"
+            >
+              {" "}
+              <ClickButtonById
+                id={["importButton", "validateFromJson", "openGenerateWithAi"]}
+              >
+                <AnimatedGradientText>
+                  🎉 <hr className="mx-2 h-4 w-[1px] shrink-0" />{" "}
+                  <span
+                    className={cn(
+                      `animate-gradient inline bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
+                    )}
+                  >
+                    Introducing generating lists with AI
+                  </span>
+                  <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+                </AnimatedGradientText>
+              </ClickButtonById>
+            </div>
+            <div className="mx-auto flex w-fit max-w-sm flex-col justify-center">
+              <span className="">
+                <TbFileSad className="text-5xl" />
+                We didn&apos;t find any data.
+              </span>
+              <span className="text-foreground/50">
+                You can create a new data list either in{" "}
+                <ClickButtonById id="importButton">import </ClickButtonById>{" "}
+                page of{" "}
+                <ClickButtonById id="newSlideButton"> create </ClickButtonById>
+                page
+              </span>
+            </div>
+          </>
         )}
         {items.map((item, i) => {
           const cleanHtml = DOMPurify.sanitize(item.richEditor, {
@@ -95,8 +122,17 @@ export default function List({
           );
         })}
         {items.length > 3 && (
-          <div className="text-center text-foreground/50">
-            {items.length} Slides
+          <div className="flex items-center justify-center gap-3">
+            <div className="text-center text-foreground/50">
+              {items.length} Slides
+            </div>
+            <div className="text-center text-foreground/50">|</div>
+            <div
+              onClick={() => setItems([])}
+              className="cursor-pointer text-center text-foreground/50 transition-colors hover:text-destructive"
+            >
+              delete all
+            </div>
           </div>
         )}
       </div>
@@ -120,24 +156,32 @@ function ListSkeleton() {
   );
 }
 
-
-
-function ClickButtonById({children,id}:{id: string, children:React.ReactNode}){
-  const handleClick = () => {
-    const button = document.getElementById(id);
-    if (button) {
-        const clickEvent = new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
+function ClickButtonById({
+  children,
+  id,
+}: {
+  id: string | string[];
+  children: React.ReactNode;
+}) {
+  const handleClick = async () => {
+    const idArray = Array.isArray(id) ? id : [id];
+    for (const id of idArray) {
+      const button = document.getElementById(id);
+      if (button) {
+        const clickEvent = new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          view: window,
         });
         button.dispatchEvent(clickEvent);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
-}
+  };
 
   return (
-    <span className="text-primary cursor-pointer" onClick={handleClick}>
+    <span className="cursor-pointer text-primary" onClick={handleClick}>
       {children}
     </span>
-  )
+  );
 }

@@ -108,15 +108,13 @@ export default function AddSlideModal({
     bulletPoints: [],
   });
 
-
-
   useEffect(() => {
     if (openedSlide === -1) {
       setNewValue(
         value ?? {
           title: "",
           richEditor: "",
-          bulletPoints: []
+          bulletPoints: [],
         },
       );
     } else if (openedSlide > -1) {
@@ -152,7 +150,9 @@ export default function AddSlideModal({
         <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
         <CredenzaContent className="z-[50]">
           <CredenzaHeader>
-            <CredenzaTitle>{openedSlide === -1? "Slide creation":"Edit slide"}</CredenzaTitle>
+            <CredenzaTitle>
+              {openedSlide === -1 ? "Slide creation" : "Edit slide"}
+            </CredenzaTitle>
             <CredenzaDescription>
               To create a slide please fill out those forms
             </CredenzaDescription>
@@ -209,7 +209,7 @@ export default function AddSlideModal({
                   <MinimalTiptapEditor
                     id="rich"
                     value={value.richEditor}
-                    className="my-2 "
+                    className="my-2"
                     onValueChange={(e) =>
                       setValue({ ...value, richEditor: e.toString() })
                     }
@@ -330,7 +330,10 @@ function SelectStrings({
     field.onChange({ target: { value: listItems } });
     setValue((prevState) => ({
       ...prevState,
-      bulletPoints: [...listItems, { id: String(listItems.length+1), text: newItem }],
+      bulletPoints: [
+        ...listItems,
+        { id: String(listItems.length + 1), text: newItem },
+      ],
     }));
     setNewItem("");
   };

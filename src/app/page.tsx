@@ -36,14 +36,13 @@ export default function Home() {
       />
       <div className="bg- fixed bottom-0 w-fit overflow-hidden rounded-t-xl border-x border-t">
         <div className="relative flex gap-2 p-2">
-          <div className="bg-opacityToolbarGradient absolute inset-0 backdrop-blur"></div>
+          <div className="absolute inset-0 bg-opacityToolbarGradient backdrop-blur"></div>
 
           <ImportModal
             list={items}
             setList={setItems}
             OpenButton={OpenImportButton}
           />
-          <ExportModal list={items} OpenButton={OpenExportButton} />
           <AddSlideModal
             openedSlide={openedSlide}
             list={items}
@@ -54,6 +53,7 @@ export default function Home() {
             setNewValue={setValue}
             setList={setItems}
           />
+          <ExportModal list={items} OpenButton={OpenExportButton} />
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@ function OpenAddSlideButton({
 }) {
   return (
     <Button
-    id="newSlideButton"
+      id="newSlideButton"
       onClick={() => setOpenedSlide(-1)}
       tooltip="Create a new slide"
       className="z-10 flex flex-col"
@@ -80,7 +80,12 @@ function OpenAddSlideButton({
 }
 function OpenImportButton() {
   return (
-    <Button id="importButton" tooltip="Import" className="z-10 flex flex-col" variant={"ghost"}>
+    <Button
+      id="importButton"
+      tooltip="Import"
+      className="z-10 flex flex-col"
+      variant={"ghost"}
+    >
       <CiImport className="stroke-[1px] text-2xl" />
     </Button>
   );
@@ -92,4 +97,3 @@ function OpenExportButton() {
     </Button>
   );
 }
-

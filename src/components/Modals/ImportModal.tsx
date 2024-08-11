@@ -36,24 +36,25 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
   const Trigger = OpenButton();
   const [activeTab, setActiveTab] = useState(0);
   const [validated, setValidated] = useState(false);
-  const [fileContent, setFileContent] = useLocalStorageState('importJson', {defaultValue: ""});
-  const [aiInput, setAiInput] = useLocalStorageState('aiInput', {defaultValue:""});
+  const [fileContent, setFileContent] = useLocalStorageState("importJson", {
+    defaultValue: "",
+  });
+  const [aiInput, setAiInput] = useLocalStorageState("aiInput", {
+    defaultValue: "",
+  });
   const { toast } = useToast();
-  const {
-    mutate: server_generateSchema,
-    isPending,
-  } = useMutation({
+  const { mutate: server_generateSchema, isPending } = useMutation({
     mutationFn: async () => {
       const response = await generateSchema(aiInput);
       if (response.status === "error") {
-        console.log('error');
-        server_generateSchema()
+        console.log("error");
+        server_generateSchema();
       }
       if (response.status === "success") {
-        setFileContent(response.message)
-        setActiveTab(0)
-        setValidated(true)
-      };
+        setFileContent(response.message);
+        setActiveTab(0);
+        setValidated(true);
+      }
       return response;
     },
   });
@@ -201,12 +202,10 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
       id: 1,
       label: "✨ generate from text",
       content: (
-        <div className="flex w-full flex-col items-center gap-3 overflow-hidden rounded-lg">
+        <div className="flex w-full flex-col items-center gap-3 overflow-hidden rounded-lg py-2">
           <p>
             ⚠️ Note that this feature is{" "}
-            <span className="font-bold text-primary"> experimental</span> and is
-            available only for{" "}
-            <span className="font-bold text-secondary">premium</span> users.
+            <span className="font-bold text-primary"> experimental</span>
           </p>
           <Textarea
             value={aiInput}
@@ -244,10 +243,8 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
             loading={isPending}
             variant={"outline"}
           >
-          {
-            isPending ? "Generating " : "Generate "
-          }
-             scheme with
+            {isPending ? "Generating " : "Generate "}
+            scheme with
             <span className="ml-1 font-bold text-primary transition-colors group-hover:text-background">
               {" "}
               AI
@@ -260,6 +257,16 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
 
   return (
     <>
+      <button
+        id="openGenerateWithAi"
+        onClick={() => setActiveTab(1)}
+        className="hidden"
+      >
+        click to move to ai generating
+      </button>
+      <button id="validateFromJson" onClick={() => setActiveTab(1)} className="hidden">
+        click import from json
+      </button>
       <div
         className={`fixed inset-0 z-[99] ${
           open ? "pointer-events-auto backdrop-blur-lg" : "backdrop-blur-none"
@@ -274,7 +281,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
               To import data select one of those options
             </CredenzaDescription>
           </CredenzaHeader>
-          <CredenzaBody>
+          <CredenzaBody className="p-1">
             <DirectionAwareTabs
               activeTab={activeTab}
               setActiveTab={setActiveTab}

@@ -29,7 +29,7 @@ export default async function generateSchema(
       return {
         status: "error",
         message: `json did not match the schema. Look:\n\n ${result}`,
-      }
+      };
     }
 
     return {
