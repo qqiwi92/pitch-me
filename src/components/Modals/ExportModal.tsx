@@ -164,6 +164,9 @@ const downloadPptx = (list: Value[]) => {
                 </Text.Bullet>
               ))}
             </Text>
+            <Text style={{ x: 3.73, y: 3, w: 3, h: 0.5, fontSize: 18 }}>
+              {slide.richEditor}
+            </Text>
           </Slide>
         );
       })}

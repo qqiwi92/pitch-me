@@ -47,7 +47,7 @@ export default function List({
                   🎉 <hr className="mx-2 h-4 w-[1px] shrink-0" />{" "}
                   <span
                     className={cn(
-                      `animate-gradient inline bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
+                      `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
                     )}
                   >
                     Introducing generating lists with AI
@@ -115,7 +115,7 @@ export default function List({
 
               <Separator className="my-3 bg-foreground/5" />
               <div
-                className="prose prose-stone flex flex-col items-center justify-center leading-[1.2] text-foreground/80 prose-img:rounded-xl"
+                className="prose prose-invert flex flex-col items-center justify-center leading-[1.2] text-foreground/80 prose-h1:mb-0 prose-img:rounded-xl [&>*]:text-foreground"
                 dangerouslySetInnerHTML={{ __html: cleanHtml }}
               ></div>
             </motion.div>
@@ -126,7 +126,7 @@ export default function List({
             <div className="text-center text-foreground/50">
               {items.length} Slides
             </div>
-            <div className="text-center text-foreground/50">|</div>
+            <div className="select-none text-center text-foreground/50">|</div>
             <div
               onClick={() => setItems([])}
               className="cursor-pointer text-center text-foreground/50 transition-colors hover:text-destructive"
@@ -156,7 +156,7 @@ function ListSkeleton() {
   );
 }
 
-function ClickButtonById({
+export function ClickButtonById({
   children,
   id,
 }: {

@@ -8,8 +8,11 @@ import { CiCirclePlus, CiExport, CiImport } from "react-icons/ci";
 import AddSlideModal from "@/components/Modals/AddSlideModal";
 import ImportModal from "@/components/Modals/ImportModal";
 import ExportModal from "@/components/Modals/ExportModal";
+import { TbReorder } from "react-icons/tb";
 import { ReactNode, useState } from "react";
 import Header from "@/components/ui/header";
+import ReorderModal from "@/components/Modals/ReorderModal";
+import { IoReorderFourSharp, IoReorderTwo } from "react-icons/io5";
 export default function Home() {
   // ! -2 means not open, -1 creating a file, other means index of edited
   const [openedSlide, setOpenedSlide] = useState(-2);
@@ -54,6 +57,7 @@ export default function Home() {
             setList={setItems}
           />
           <ExportModal list={items} OpenButton={OpenExportButton} />
+          <ReorderModal list={items} setList={setItems} OpenButton={ReorderButton} />
         </div>
       </div>
     </div>
@@ -94,6 +98,13 @@ function OpenExportButton() {
   return (
     <Button tooltip="Export" className="z-10 flex flex-col" variant={"ghost"}>
       <CiExport className="stroke-[1px] text-2xl" />
+    </Button>
+  );
+}
+function ReorderButton() {
+  return (
+    <Button tooltip="Reorder" className="z-10 flex flex-col" variant={"ghost"}>
+      <IoReorderFourSharp className="stroke-[1px]  text-2xl" />
     </Button>
   );
 }

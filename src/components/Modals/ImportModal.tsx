@@ -213,7 +213,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
               setValidated(false);
               setAiInput(e.target.value);
             }}
-            className={`remove-scrollbar ${aiInput.length > 128 ? "h-[35vh]" : "h-[20vh]"}`}
+            className={`remove-scrollbar mx-2 focus:outline-none ${aiInput.length > 128 ? "h-[35vh]" : "h-[20vh]"}`}
             placeholder="So I want to pitch investors this million dollar idea..."
           />
           <div className="remove-scrollbar flex max-w-[100%] gap-2 overflow-x-auto">
@@ -236,7 +236,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
           </div>
 
           <Button
-            className="group"
+            className={`group`}
             onClick={() => {
               server_generateSchema();
             }}
@@ -264,7 +264,11 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
       >
         click to move to ai generating
       </button>
-      <button id="validateFromJson" onClick={() => setActiveTab(1)} className="hidden">
+      <button
+        id="validateFromJson"
+        onClick={() => setActiveTab(1)}
+        className="hidden"
+      >
         click import from json
       </button>
       <div
@@ -274,7 +278,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
       ></div>
       <Credenza open={open} onOpenChange={setOpen}>
         <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
-        <CredenzaContent className="z-[100]">
+        <CredenzaContent className="remove-scrollbar z-[100]">
           <CredenzaHeader>
             <CredenzaTitle>Import data</CredenzaTitle>
             <CredenzaDescription>
@@ -298,7 +302,8 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
             </CredenzaClose>
             <motion.div layout>
               <Button
-                className={`${validated ? "bg-accent hover:bg-accent/90" : "bg-primary hover:bg-primary/90"} select-none transition`}
+                layout={false}
+                className={`${validated ? "bg-accent hover:bg-accent/90" : "bg-primary hover:bg-primary/90"} select-none transition duration-200 ${activeTab === 1 ? "w-0 p-0" : "w-fit"} max-w-20 transition-all`}
                 onClick={() => validateJSONSave()}
               >
                 {validated ? "Apply" : "Validate"}
