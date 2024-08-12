@@ -6,6 +6,7 @@ type generateSchemaResponse = {
   status: "error" | "success";
   message: string;
 };
+
 export default async function generateSchema(
   userPrompt: string,
 ): Promise<generateSchemaResponse> {

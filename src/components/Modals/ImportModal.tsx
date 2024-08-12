@@ -29,6 +29,7 @@ interface IModal {
   list: Value[];
   setList: React.Dispatch<React.SetStateAction<Value[]>>;
 }
+export const runtime = "edge";
 
 export default function ImportModal({ OpenButton, list, setList }: IModal) {
   // state
@@ -54,6 +55,11 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
         setFileContent(response.message);
         setActiveTab(0);
         setValidated(true);
+        toast({
+          title: "JSON was successfully generated",
+          description: "Now you can import it to the list",
+          variant: "success",
+        });
       }
       return response;
     },

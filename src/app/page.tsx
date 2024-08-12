@@ -57,7 +57,11 @@ export default function Home() {
             setList={setItems}
           />
           <ExportModal list={items} OpenButton={OpenExportButton} />
-          <ReorderModal list={items} setList={setItems} OpenButton={ReorderButton} />
+          <ReorderModal
+            list={items}
+            setList={setItems}
+            OpenButton={ReorderButton}
+          />
         </div>
       </div>
     </div>
@@ -104,7 +108,7 @@ function OpenExportButton() {
 function ReorderButton() {
   return (
     <Button tooltip="Reorder" className="z-10 flex flex-col" variant={"ghost"}>
-      <IoReorderFourSharp className="stroke-[1px]  text-2xl" />
+      <IoReorderFourSharp className="stroke-[1px] text-2xl" />
     </Button>
   );
 }
