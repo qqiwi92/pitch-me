@@ -219,9 +219,16 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
               setValidated(false);
               setAiInput(e.target.value);
             }}
+            maxLength={100}
             className={`remove-scrollbar mx-2 focus:outline-none ${aiInput.length > 128 ? "h-[35vh]" : "h-[20vh]"}`}
             placeholder="So I want to pitch investors this million dollar idea..."
           />
+          <p
+            className={`transition-all ${aiInput.length >= 100 ? "scale-x-105 text-red-600" : ""}`}
+          >
+            {" "}
+            {aiInput.length}/100
+          </p>
           <div className="remove-scrollbar flex max-w-[100%] gap-2 overflow-x-auto">
             {examples.map((example) => {
               return (
