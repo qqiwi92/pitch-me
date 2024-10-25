@@ -49,7 +49,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
       const response = await generateSchema(aiInput);
       if (response.status === "error") {
         console.log("error");
-        server_generateSchema();
+        // server_generateSchema();
       }
       if (response.status === "success") {
         setFileContent(response.message);
@@ -226,7 +226,6 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
           <p
             className={`transition-all ${aiInput.length >= 100 ? "scale-x-105 text-red-600" : ""}`}
           >
-            {" "}
             {aiInput.length}/100
           </p>
           <div className="remove-scrollbar flex max-w-[100%] gap-2 overflow-x-auto">
@@ -259,7 +258,6 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
             {isPending ? "Generating " : "Generate "}
             scheme with
             <span className="ml-1 font-bold text-primary transition-colors group-hover:text-background">
-              {" "}
               AI
             </span>
           </Button>
