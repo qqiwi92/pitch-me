@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast/toaster";
-import Providers from "@/components/utills/Providers";
+import QueryProvider from "@/components/utils/providers/queryProvider";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+import Header from "@/components/ui/header";
+import { ListProvider } from "@/components/utils/providers/listProvider";
 
 const montserrat = Montserrat({ subsets: ["latin", "cyrillic"] });
 
@@ -119,14 +123,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className + " dark"}>
-        <Providers>
-          <div
-            vaul-drawer-wrapper=""
-            className="mx-auto max-w-6xl bg-background px-3 text-foreground"
-          >
-            {children}
-          </div>
-        </Providers>
+        <QueryProvider>
+          <ListProvider>
+            <div
+              vaul-drawer-wrapper=""
+              className="mx-auto max-w-6xl bg-background px-3 text-foreground"
+            >
+              {" "}
+              <Header />
+              {children}
+            </div>
+          </ListProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+
+        </QueryProvider>
         <Toaster />
       </body>
     </html>

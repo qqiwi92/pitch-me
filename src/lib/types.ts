@@ -30,3 +30,11 @@ export type AImportStatus = {
   status: "initial" | "loading" | "success" | "error";
   message: string;
 };
+
+
+export type List = {
+  list_id: number;
+  list_name: string;
+  created_at: string;
+  user_id: string;
+};

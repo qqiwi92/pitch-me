@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
 import { Label } from "../ui/label";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { Dispatch, ReactElement, SetStateAction, useEffect, useRef, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { AnimatePresence, Reorder, motion } from "framer-motion";
 import { heightVariants } from "@/lib/variants";
@@ -37,11 +37,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { Value, BulletPoint } from "@/lib/types";
+import useLocalStorageState from "use-local-storage-state";
 interface IModal {
   list: Value[];
   setList: React.Dispatch<React.SetStateAction<Value[]>>;
-  newValue: Value;
-  setNewValue: React.Dispatch<React.SetStateAction<Value>>;
   setItems: React.Dispatch<React.SetStateAction<Value[]>>;
   OpenButton: ({
     openedSlide,
@@ -55,9 +54,7 @@ interface IModal {
 }
 
 export default function AddSlideModal({
-  newValue,
   list,
-  setNewValue,
   openedSlide,
   setOpenedSlide,
   setList,
@@ -81,7 +78,13 @@ export default function AddSlideModal({
       )
       .min(2, "Please add at least 2 bullet points"),
   });
-
+  const [newValue, setNewValue] = useLocalStorageState<Value>("value", {
+    defaultValue: {
+      title: "",
+      richEditor: "",
+      bulletPoints: [],
+    },
+  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -309,7 +312,7 @@ function SelectStrings({
   field,
 }: {
   strings: BulletPoint[] | undefined;
-  setValue: IModal["setNewValue"];
+  setValue: Dispatch<SetStateAction<Value>>;
   field: ControllerRenderProps<
     {
       title: string;

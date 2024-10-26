@@ -1,6 +1,5 @@
 'use server'
 import { Hercai } from "hercai";
-import { AImportStatus } from "./types";
 import { validateJsonOnValueType } from "./types";
 type generateSchemaResponse = {
   status: "error" | "success";

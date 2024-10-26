@@ -8,7 +8,7 @@ import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { motion } from "framer-motion";
 import { Skeleton } from "../skeleton";
 import { Suspense, useEffect, useState } from "react";
-import AnimatedGradientText from "@/components/animated-gradinent-text";
+import AnimatedGradientText from "@/components/utils/animated-gradinent-text";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 
@@ -39,7 +39,6 @@ export default function List({
               id="newSlideButton"
               className="fixed left-1/2 top-32 w-full -translate-x-1/2 cursor-pointer"
             >
-              {" "}
               <ClickButtonById
                 id={["importButton", "validateFromJson", "openGenerateWithAi"]}
               >

@@ -52,7 +52,7 @@ export default function ImportModal({ OpenButton, list, setList }: IModal) {
         // server_generateSchema();
       }
       if (response.status === "success") {
-        setFileContent(response.message);
+        setFileContent(JSON.stringify(JSON.parse(response.message.trim()), null, 2) );
         setActiveTab(0);
         setValidated(true);
         toast({
