@@ -3,7 +3,7 @@ import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast/toaster";
 import QueryProvider from "@/components/utils/providers/queryProvider";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import Header from "@/components/ui/header";
 import { ListProvider } from "@/components/utils/providers/listProvider";
@@ -135,7 +135,6 @@ export default function RootLayout({
             </div>
           </ListProvider>
           <ReactQueryDevtools initialIsOpen={false} />
-
         </QueryProvider>
         <Toaster />
       </body>

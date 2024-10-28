@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import useLocalStorageState from "use-local-storage-state";
 import type { Slide } from "@/lib/types";
 import { createClient } from "../supabase/client";
+import { NextUIProvider } from "@nextui-org/react";
 
 type ListContextType = {
   items: Slide[];
@@ -24,7 +25,8 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
     <ListContext.Provider
       value={{ items, setItems, openedSlide, setOpenedSlide }}
     >
-      {children}
+      {" "}
+      <NextUIProvider>{children} </NextUIProvider>
     </ListContext.Provider>
   );
 };

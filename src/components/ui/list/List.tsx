@@ -11,6 +11,7 @@ import { Suspense, useEffect, useState } from "react";
 import AnimatedGradientText from "@/components/utils/animated-gradinent-text";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import { Coolshape } from "coolshapes-react";
 
 interface IList {
   items: Slide[];
@@ -18,11 +19,7 @@ interface IList {
   setOpenedSlide: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function List({
-  items,
-  setItems,
-  setOpenedSlide,
-}: IList) {
+export default function List({ items, setItems, setOpenedSlide }: IList) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setLoaded(true);
@@ -53,12 +50,12 @@ export default function List({
                 </AnimatedGradientText>
               </ClickButtonById>
             </div>
-            <div className="mx-auto flex w-fit max-w-sm flex-col justify-center">
-              <span className="">
-                <TbFileSad className="text-5xl" />
+            <div className="mx-auto flex w-fit max-w-sm flex-col items-center justify-center">
+              <span className="text-2xl font-semibold flex flex-col items-center justify-center">
+                <Coolshape type="wheel" className="mb-5" />
                 We didn&apos;t find any data.
               </span>
-              <span className="text-foreground/50">
+              <span className="text-center text-foreground/50">
                 You can create a new data list either in{" "}
                 <ClickButtonById id="importButton">import </ClickButtonById>{" "}
                 page of{" "}

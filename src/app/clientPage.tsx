@@ -1,7 +1,9 @@
 "use client";
-
+import { Skeleton } from "@nextui-org/skeleton";
 import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
+import { Coolshape } from "coolshapes-react";
+
 import {
   QueryClient,
   useMutation,
@@ -45,7 +47,7 @@ export default function ClientPage({ user }: { user: User }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [currentListId, setCurrentListId] = useState<number | null>(null);
 
-  const { data: lists } = useQuery({
+  const { data: lists, isPending } = useQuery({
     queryKey: ["lists"],
     queryFn: async () => {
       const supabase = createClient();
@@ -111,28 +113,41 @@ export default function ClientPage({ user }: { user: User }) {
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-3 ">
-      <div className="flex flex-col gap-3">
-        {lists?.length === 0 ? (
-          <span className="flex flex-col gap-3">
-            <span>We did not find any lists.</span>{" "}
+    <div className="flex min-h-screen flex-col items-center justify-center gap-3">
+      <Coolshape type="moon" />
+
+      <div className={`flex flex-col items-center justify-center gap-3`}>
+        {isPending ? (
+          <div className="flex flex-col gap-4">
+            <p>Select or create a list to continue.</p>
+            {Array(3)
+              .fill(0)
+              .map((_, i) => (
+                <div key={i} className="relative">
+                  <Skeleton className="bottom-0 left-0 right-0 top-0 h-12 w-64 rounded-md" />
+                </div>
+              ))}
+          </div>
+        ) : lists?.length === 0 ? (
+          <span className="flex flex-col items-center justify-center gap-5">
+            <span>We did not find any lists.</span>
           </span>
         ) : (
           <p>Select or create a list to continue.</p>
         )}
 
         <ScrollArea
-          className={`${(lists?.length ?? 0) < 5 ? "h-full" : "h-52"}`}
+          className={`${(lists?.length ?? 0) < 5 ? "h-full" : "h-52"} l`}
         >
           {lists?.map((list) => (
             <motion.div
               layout
               key={list.list_id}
-              className="relative mb-2 flex overflow-hidden size-full w-full justify-between gap-3 rounded-xl hover:border-primary border bg-background px-3 py-2 transition-all"
+              className="relative mb-2 flex size-full w-64 justify-between gap-3 overflow-hidden rounded-xl border bg-background px-3 py-2 transition-all hover:border-primary"
             >
               <Link
                 href={`/list/${list.list_id}`}
-                className="absolute bottom-0 left-0 right-0 top-0 "
+                className="absolute bottom-0 left-0 right-0 top-0"
               >
                 {" "}
               </Link>
@@ -179,7 +194,9 @@ export default function ClientPage({ user }: { user: User }) {
 
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline">Create a list</Button>
+            <Button variant="outline" className="font-semibold">
+              Create a list
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
