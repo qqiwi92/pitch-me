@@ -11,12 +11,11 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@/components/ui/credenza";
-import { Presentation, Slide, Text, Shape, Image, render } from "react-pptx";
 import { Button } from "@/components/ui/button";
 import React, { ReactElement, useRef, useState } from "react";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { DirectionAwareTabs } from "../ui/tabs";
-import { AImportStatus, validateJsonOnValueType, Value } from "@/lib/types";
+import { AImportStatus, Slide, validateJsonOnValueType, } from "@/lib/types";
 import { motion } from "framer-motion";
 import { useToast } from "../ui/toast/use-toast";
 import { examples } from "@/lib/data/examples";
@@ -24,14 +23,14 @@ import { Textarea } from "../ui/textarea";
 import generateSchema from "@/lib/generateSchema";
 import { useMutation } from "@tanstack/react-query";
 import useLocalStorageState from "use-local-storage-state";
+
 interface IModal {
   OpenButton: () => ReactElement;
-  list: Value[];
-  setList: React.Dispatch<React.SetStateAction<Value[]>>;
+  setList: (newSlide: Slide[]) => void;
 }
 export const runtime = "edge";
 
-export default function ImportModal({ OpenButton, list, setList }: IModal) {
+export default function ImportModal({ OpenButton,  setList }: IModal) {
   // state
   const [open, setOpen] = useState(false);
   const Trigger = OpenButton();

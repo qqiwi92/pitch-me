@@ -5,11 +5,6 @@ export type BulletPoint = {
   text: string;
 };
 
-export type Value = {
-  title: string;
-  richEditor: string;
-  bulletPoints: BulletPoint[];
-};
 
 const BulletPointSchema = t.type({
   id: t.string,
@@ -31,10 +26,18 @@ export type AImportStatus = {
   message: string;
 };
 
-
 export type List = {
   list_id: number;
   list_name: string;
   created_at: string;
   user_id: string;
+  list: Slide[]
 };
+
+export type Slide = {
+  title: string;
+  richEditor: string;
+  bulletPoints: BulletPoint[];
+  slideId: string;
+};
+export type setList = (newSlide: Slide[]) => void;

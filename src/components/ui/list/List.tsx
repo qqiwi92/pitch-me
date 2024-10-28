@@ -1,6 +1,6 @@
 "use client";
 
-import { Value } from "@/lib/types";
+import { Slide } from "@/lib/types";
 import DOMPurify from "dompurify";
 import { TbFileSad } from "react-icons/tb";
 import { Separator } from "../separator";
@@ -13,16 +13,14 @@ import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 
 interface IList {
-  items: Value[];
-  setItems: React.Dispatch<React.SetStateAction<Value[]>>;
-  openedSlide: number;
+  items: Slide[];
+  setItems: (newSlide: Slide[]) => void;
   setOpenedSlide: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function List({
   items,
   setItems,
-  openedSlide,
   setOpenedSlide,
 }: IList) {
   const [loaded, setLoaded] = useState(false);

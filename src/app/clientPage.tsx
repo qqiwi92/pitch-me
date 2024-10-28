@@ -37,7 +37,6 @@ import Link from "next/link";
 
 export default function ClientPage({ user }: { user: User }) {
   const queryClient = useQueryClient();
-  const { items, setItems, openedSlide, setOpenedSlide } = useList();
   const [newName, setNewName] = useLocalStorageState("newName", {
     defaultValue: "",
   });
@@ -52,7 +51,7 @@ export default function ClientPage({ user }: { user: User }) {
       const supabase = createClient();
       const res = await supabase
         .from("lists")
-        .select("*")
+        .select("created_at, list_id, list_name, user_id")
         .eq("user_id", user.id)
         .limit(10);
       return res.data as List[];
@@ -112,7 +111,7 @@ export default function ClientPage({ user }: { user: User }) {
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-3 py-24">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-3 ">
       <div className="flex flex-col gap-3">
         {lists?.length === 0 ? (
           <span className="flex flex-col gap-3">
@@ -129,14 +128,23 @@ export default function ClientPage({ user }: { user: User }) {
             <motion.div
               layout
               key={list.list_id}
-              className="mb-2 flex w-full justify-between gap-3 rounded-xl border bg-background p-2 "
+              className="relative mb-2 flex overflow-hidden size-full w-full justify-between gap-3 rounded-xl hover:border-primary border bg-background px-3 py-2 transition-all"
             >
-              <Link href={`/list/${list.list_id}`} className="size-full flex w-full justify-between gap-3 rounded-xl  bg-background">
-              
+              <Link
+                href={`/list/${list.list_id}`}
+                className="absolute bottom-0 left-0 right-0 top-0 "
+              >
+                {" "}
+              </Link>
+
               <span className="text-xl font-semibold">{list.list_name}</span>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="z-[30] h-8 w-8 hover:bg-foreground/10 hover:text-white"
+                  >
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                   </Button>
@@ -144,7 +152,7 @@ export default function ClientPage({ user }: { user: User }) {
                 <PopoverContent className="w-32 p-2" align="end">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start hover:bg-foreground/20  hover:text-white"
+                    className="w-full justify-start hover:bg-foreground/20 hover:text-white"
                     onClick={() => {
                       setEditName(list.list_name);
                       setCurrentListId(list.list_id);
@@ -155,7 +163,7 @@ export default function ClientPage({ user }: { user: User }) {
                   </Button>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/20"
+                    className="w-full justify-start text-destructive hover:bg-destructive/20 hover:text-destructive"
                     onClick={() => {
                       setCurrentListId(list.list_id);
                       setIsDeleteOpen(true);
@@ -165,7 +173,6 @@ export default function ClientPage({ user }: { user: User }) {
                   </Button>
                 </PopoverContent>
               </Popover>
-              </Link>
             </motion.div>
           ))}
         </ScrollArea>

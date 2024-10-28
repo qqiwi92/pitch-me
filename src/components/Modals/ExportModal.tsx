@@ -10,18 +10,19 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@/components/ui/credenza";
-import { Presentation, Slide, Text, Shape, Image, render } from "react-pptx";
 import { Button } from "@/components/ui/button";
 import { ReactElement, useRef, useState } from "react";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { DirectionAwareTabs } from "../ui/tabs";
-import { Value } from "@/lib/types";
+import { List, Slide } from "@/lib/types";
+import { downloadPptx } from "./downloadPptx";
 interface IModal {
   OpenButton: () => ReactElement;
-  list: Value[];
+  list: Slide[];
+  currentInfo: List;
 }
 
-export default function ExportModal({ OpenButton, list }: IModal) {
+export default function ExportModal({ OpenButton, list, currentInfo }: IModal) {
   const [open, setOpen] = useState(false);
   const Trigger = OpenButton();
   const [activeTab, setActiveTab] = useState(0);
@@ -75,7 +76,7 @@ export default function ExportModal({ OpenButton, list }: IModal) {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              await downloadPptx(list);
+              await downloadPptx(list, currentInfo.list_name);
               setLoading(false);
             }}
           >
@@ -122,74 +123,3 @@ export default function ExportModal({ OpenButton, list }: IModal) {
   );
 }
 
-const downloadPptx = (list: Value[]) => {
-  render(
-    <Presentation>
-      <Slide>
-        <Text
-          style={{
-            x: 1.73,
-            y: 1,
-            w: 8,
-            h: 1,
-            fontSize: 72,
-            fontFace: "Montserrat",
-            bold: true,
-          }}
-        >
-          Name of the project{" "}
-        </Text>
-      </Slide>
-      {list.map((slide) => {
-        return (
-          <Slide key={slide.title}>
-            <Text
-              style={{
-                x: 1.73,
-                y: 1,
-                w: 8,
-                h: 1,
-                fontSize: 36,
-                fontFace: "Montserrat",
-                bold: true,
-              }}
-            >
-              {slide.title}
-            </Text>
-            <Text style={{ x: 3.73, y: 3, w: 3, h: 0.5, fontSize: 18 }}>
-              {slide.bulletPoints.map((p) => (
-                <Text.Bullet key={p.text} style={{ margin: 10 }}>
-                  {" "}
-                  {p.text}{" "}
-                </Text.Bullet>
-              ))}
-            </Text>
-            <Text style={{ x: 3.73, y: 3, w: 3, h: 0.5, fontSize: 18 }}>
-              {slide.richEditor}
-            </Text>
-          </Slide>
-        );
-      })}
-    </Presentation>,
-  ).then((blob) => {
-    if (!(blob instanceof ArrayBuffer || blob instanceof Uint8Array)) {
-      return;
-    }
-    const byteArray = new Uint8Array(blob);
-
-    // Create a Blob object from the Uint8Array
-    const newBlob = new Blob([byteArray], {
-      type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    });
-
-    const url = URL.createObjectURL(newBlob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "smooth_bootstrap_presentation.pptx";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });
-};

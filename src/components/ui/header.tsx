@@ -6,6 +6,7 @@ import {
   useMotionTemplate,
   useSpring,
 } from "framer-motion";
+import Link from "next/link";
 export default function Header() {
   const { scrollY } = useScroll();
 
@@ -19,7 +20,7 @@ export default function Header() {
 
   const textSizeRem = useMotionTemplate`${textSize}rem`;
   return (
-    <div className="bg-opacity-radial-gradient fixed left-1/2 top-2 z-[10] w-fit -translate-x-1/2 rounded-xl px-4 backdrop-blur-xl">
+    <Link href='/' className="bg-opacity-radial-gradient fixed left-1/2 top-2 z-[10] w-fit -translate-x-1/2 rounded-xl px-4 backdrop-blur-xl">
       <motion.h1
         style={{
           fontSize: textSizeRem,
@@ -31,6 +32,6 @@ export default function Header() {
       >
         <span>smoother!</span>
       </motion.h1>
-    </div>
+    </Link>
   );
 }

@@ -31,17 +31,13 @@ import { Label } from "../ui/label";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { AnimatePresence, Reorder, motion } from "framer-motion";
-import { heightVariants } from "@/lib/variants";
 import { ExitIcon } from "@radix-ui/react-icons";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import type { Value, BulletPoint } from "@/lib/types";
 import { ClickButtonById } from "../ui/list/List";
+import { Slide } from "@/lib/types";
 
 interface IModal {
-  list: Value[];
-  setList: React.Dispatch<React.SetStateAction<Value[]>>;
+  list: Slide[];
+  setList: (newSlide: Slide[]) => void;
   OpenButton: () => ReactElement;
 }
 

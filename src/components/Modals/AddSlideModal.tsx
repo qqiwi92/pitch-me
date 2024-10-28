@@ -9,7 +9,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+import generateRandomId, { cn } from "@/lib/utils";
 import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 
 import {
@@ -28,7 +28,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
 import { Label } from "../ui/label";
-import { Dispatch, ReactElement, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  ReactElement,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Separator } from "@/components/ui/separator";
 import { AnimatePresence, Reorder, motion } from "framer-motion";
 import { heightVariants } from "@/lib/variants";
@@ -36,12 +43,11 @@ import { ExitIcon } from "@radix-ui/react-icons";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { Value, BulletPoint } from "@/lib/types";
+import type {  BulletPoint, setList, Slide } from "@/lib/types";
 import useLocalStorageState from "use-local-storage-state";
 interface IModal {
-  list: Value[];
-  setList: React.Dispatch<React.SetStateAction<Value[]>>;
-  setItems: React.Dispatch<React.SetStateAction<Value[]>>;
+  list: Slide[];
+  setItems: setList;
   OpenButton: ({
     openedSlide,
     setOpenedSlide,
@@ -57,7 +63,6 @@ export default function AddSlideModal({
   list,
   openedSlide,
   setOpenedSlide,
-  setList,
   setItems,
   OpenButton,
 }: IModal) {
@@ -78,11 +83,12 @@ export default function AddSlideModal({
       )
       .min(2, "Please add at least 2 bullet points"),
   });
-  const [newValue, setNewValue] = useLocalStorageState<Value>("value", {
+  const [newValue, setNewValue] = useLocalStorageState<Slide>("value", {
     defaultValue: {
       title: "",
       richEditor: "",
-      bulletPoints: [],
+      bulletPoints: [], 
+      slideId: generateRandomId(),
     },
   });
   const form = useForm<z.infer<typeof formSchema>>({
@@ -92,12 +98,18 @@ export default function AddSlideModal({
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    setValue({ ...values, richEditor: values.richEditor ?? "" });
-    setItems((prev) => [...prev, value]);
+    setValue({
+      ...values,
+      richEditor: values.richEditor ?? "",
+      bulletPoints: values.bulletPoints ?? [],
+      slideId: generateRandomId(),
+    });
+    setItems([...list, value]);
     setValue({
       title: "",
       richEditor: "",
       bulletPoints: [],
+      slideId: generateRandomId(),
     });
     setOpenedSlide(-2);
   }
@@ -105,10 +117,11 @@ export default function AddSlideModal({
     openedSlide: openedSlide,
     setOpenedSlide: setOpenedSlide,
   });
-  const [value, setValue] = useState<Value>({
+  const [value, setValue] = useState<Slide>({
     title: "",
     richEditor: "",
-    bulletPoints: [],
+    bulletPoints: [], 
+    slideId: generateRandomId(),
   });
 
   useEffect(() => {
@@ -121,10 +134,10 @@ export default function AddSlideModal({
         },
       );
     } else if (openedSlide > -1) {
-      setList((prev) => [
-        ...prev.slice(0, openedSlide),
+      setItems([
+        ...list.slice(0, openedSlide),
         value,
-        ...prev.slice(openedSlide + 1),
+        ...list.slice(openedSlide + 1),
       ]);
     }
   }, [value]);
@@ -258,8 +271,8 @@ interface TitleInputProps {
     },
     "title"
   >;
-  value: Value;
-  setValue: (value: Value) => void;
+  value: Slide;
+  setValue: (value: Slide) => void;
   form: UseFormReturn<
     {
       title: string;
@@ -312,7 +325,7 @@ function SelectStrings({
   field,
 }: {
   strings: BulletPoint[] | undefined;
-  setValue: Dispatch<SetStateAction<Value>>;
+  setValue: Dispatch<SetStateAction<Slide>>;
   field: ControllerRenderProps<
     {
       title: string;
