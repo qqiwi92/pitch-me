@@ -77,7 +77,7 @@ export default function Page() {
     <div className="flex min-h-screen flex-col items-center justify-center py-24">
       <Link
         href={"/"}
-        className="group fixed left-5 top-2 mb-auto mr-auto flex items-center justify-center gap-2 font-bold"
+        className="group left-5 top-2 mb-5 mr-auto flex items-center justify-center gap-2 text-xl font-bold underline md:fixed"
       >
         <ChevronLeft
           strokeWidth={4}

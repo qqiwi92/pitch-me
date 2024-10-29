@@ -22,7 +22,7 @@ export default function Header() {
   return (
     <Link
       href="/"
-      className="bg-opacity-radial-gradient fixed left-1/2 top-2 z-[10] w-fit -translate-x-1/2 rounded-xl px-4 backdrop-blur-xl"
+      className="bg-opacity-radial-gradient fixed left-1/2 top-2 z-[10] w-fit -translate-x-1/2 scale-90 rounded-xl px-4 backdrop-blur-xl sm:scale-100"
     >
       <motion.h1
         style={{
