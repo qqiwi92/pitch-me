@@ -90,7 +90,7 @@
 #rich * {
   line-height: 1;
 }
- ::selection {
+::selection {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }

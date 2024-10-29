@@ -11,6 +11,8 @@ import { useList } from "@/lib/fetchingList";
 import { Skeleton } from "@nextui-org/skeleton";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { Separator } from "@/components/ui/separator";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function Page() {
   const {
@@ -24,6 +26,16 @@ export default function Page() {
   if (isLoading) {
     return (
       <div className="mx-auto flex max-w-xl flex-col items-center justify-center gap-5 py-24">
+        <Link
+          href={"/"}
+          className="group fixed left-5 top-2 mb-auto mr-auto flex items-center justify-center gap-2 font-bold"
+        >
+          <ChevronLeft
+            strokeWidth={4}
+            className="h-4 w-4 text-primary transition group-hover:-translate-x-0.5"
+          />
+          <Skeleton className="h-6 w-20 rounded-md transition group-hover:opacity-95" />
+        </Link>
         {Array(5)
           .fill(0)
           .map((_, index) => (
@@ -42,7 +54,7 @@ export default function Page() {
                   .map((point, i) => {
                     return (
                       <li key={i} className="flex">
-                        <span className="mr-3 text-foreground/40 w-5">
+                        <span className="mr-3 w-5 text-foreground/40">
                           {i < 10 ? `0${i + 1}` : `${i + 1}`}.
                         </span>
                         <Skeleton className="h-4 w-20 rounded-md" />
@@ -62,7 +74,19 @@ export default function Page() {
     );
   }
   return (
-    <div className="flex min-h-screen items-center justify-center py-24">
+    <div className="flex min-h-screen flex-col items-center justify-center py-24">
+      <Link
+        href={"/"}
+        className="group fixed left-5 top-2 mb-auto mr-auto flex items-center justify-center gap-2 font-bold"
+      >
+        <ChevronLeft
+          strokeWidth={4}
+          className="h-4 w-4 text-primary transition group-hover:-translate-x-0.5"
+        />
+        <p className="transition group-hover:opacity-95">
+          {currentInfo.list_name}
+        </p>
+      </Link>
       <List
         setItems={setItems}
         items={items ?? []}

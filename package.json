@@ -44,6 +44,7 @@
     "eslint-plugin-react": "^7.34.3",
     "framer-motion": "^11.2.12",
     "hercai": "^12.3.2",
+    "input-otp": "^1.2.4",
     "io-ts": "^2.2.21",
     "lru-cache": "^10.3.1",
     "lucide-react": "^0.400.0",

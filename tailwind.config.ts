@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import {nextui} from "@nextui-org/react"
+import { nextui } from "@nextui-org/react";
 
 const config = {
   darkMode: ["class"],
@@ -8,8 +8,8 @@ const config = {
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-
+    "./src/**/*.{ts,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   prefix: "",
   theme: {
@@ -80,6 +80,10 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -99,6 +103,8 @@ const config = {
         },
       },
       animation: {
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
+
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         shine: "shine 8s ease-in-out infinite",
@@ -106,7 +112,11 @@ const config = {
       },
     },
   },
-  plugins: [nextui(),require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    nextui(),
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+  ],
 } satisfies Config;
 
 export default config;

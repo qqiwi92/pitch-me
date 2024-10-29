@@ -61,13 +61,13 @@ export default function ReorderModal({ list, setList, OpenButton }: IModal) {
             </CredenzaDescription>
           </CredenzaHeader>
           <CredenzaBody>
-            <div className="">
+            <div className="remove-scrollbar">
               <Reorder.Group axis="y" values={list} onReorder={setList}>
                 {list.map((item, i) => (
                   <Reorder.Item
                     key={item.title}
                     value={item}
-                    className="my-2 rounded-xl border bg-background px-4 py-1"
+                    className="my-2 rounded-xl cursor-move border bg-background px-4 py-1"
                   >
                     <span className="pr-2 text-foreground/50">
                       {i.toString().length === 1 ? `0${i}` : i}{" "}
@@ -86,7 +86,9 @@ export default function ReorderModal({ list, setList, OpenButton }: IModal) {
                       "openGenerateWithAi",
                     ]}
                   >
-                  <span className="bg-gradient-to-tr from-secondary to-primary font-bold text-transparent bg-clip-text">AI mode</span>
+                    <span className="bg-gradient-to-tr from-secondary to-primary bg-clip-text font-bold text-transparent">
+                      AI mode
+                    </span>
                   </ClickButtonById>
                 </p>
               )}
