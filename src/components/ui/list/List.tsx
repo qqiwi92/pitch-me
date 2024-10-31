@@ -25,13 +25,13 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
     setLoaded(true);
   }, []);
   return (
-    <div className="remove-scrollbar flex w-full max-w-xl flex-col gap-5">
+    <motion.div
+      layout
+      className="remove-scrollbar flex  w-full max-w-xl flex-col gap-5 bg-background"
+    >
       {items.length === 0 && loaded && (
         <>
-          <div
-            id="newSlideButton"
-            className="fixed left-1/2 top-32 w-full -translate-x-1/2 cursor-pointer"
-          >
+          <div className="fixed left-1/2 top-32 w-full -translate-x-1/2 cursor-pointer">
             <ClickButtonById
               id={["importButton", "validateFromJson", "openGenerateWithAi"]}
             >
@@ -71,7 +71,8 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
           return (
             <motion.div
               layout
-              // initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 + 0.001 * i }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               key={item.title + item.slideId}
@@ -117,7 +118,7 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
         })}
       </AnimatePresence>
       {items.length > 3 && (
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-3 bg-background">
           <div className="text-center text-foreground/50">
             {items.length} Slides
           </div>
@@ -130,7 +131,7 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

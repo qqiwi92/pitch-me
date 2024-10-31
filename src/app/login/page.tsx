@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { login, verifyOtp } from "./actions";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { useEffect, useId, useState } from "react";
+import { Suspense, useEffect, useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import {
@@ -24,6 +24,13 @@ import {
 } from "@/components/ui/input-otp";
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginPageSuspense />
+    </Suspense>
+  );
+}
+function LoginPageSuspense() {
   const searchParams = useSearchParams();
   const errorType = searchParams.get("t");
   const { toast } = useToast();

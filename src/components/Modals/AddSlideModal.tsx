@@ -43,7 +43,7 @@ import { ExitIcon } from "@radix-ui/react-icons";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type {  BulletPoint, setList, Slide } from "@/lib/types";
+import type { BulletPoint, setList, Slide } from "@/lib/types";
 import useLocalStorageState from "use-local-storage-state";
 interface IModal {
   list: Slide[];
@@ -69,8 +69,9 @@ export default function AddSlideModal({
   const formSchema = z.object({
     title: z
       .string({ required_error: "Title is required" })
-      .min(2, "Title should be at least 2 characters"),
-    richEditor: z.string().optional(),
+      .min(2, "Title should be at least 2 characters")
+      .max(50),
+    richEditor: z.string().max(1000).optional(),
     bulletPoints: z
       .array(
         z.object({
@@ -81,13 +82,13 @@ export default function AddSlideModal({
           required_error: "Please add at least 2 bullet points",
         },
       )
-      .min(2, "Please add at least 2 bullet points"),
+      .min(0, "Please add at least 2 bullet points"),
   });
   const [newValue, setNewValue] = useLocalStorageState<Slide>("value", {
     defaultValue: {
       title: "",
       richEditor: "",
-      bulletPoints: [], 
+      bulletPoints: [],
       slideId: generateRandomId(),
     },
   });
@@ -98,6 +99,20 @@ export default function AddSlideModal({
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // Check for duplicate titles
+    const isDuplicateTitle = list.some(
+      (slide) => slide.title.toLowerCase() === values.title.toLowerCase()
+    );
+  
+    if (isDuplicateTitle) {
+      form.setError("title", {
+        type: "manual",
+        message: "Title must be unique",
+      });
+      return;
+    }
+  
+    // Proceed if the title is unique
     setValue({
       ...values,
       richEditor: values.richEditor ?? "",
@@ -113,6 +128,7 @@ export default function AddSlideModal({
     });
     setOpenedSlide(-2);
   }
+  
   const Trigger = OpenButton({
     openedSlide: openedSlide,
     setOpenedSlide: setOpenedSlide,
@@ -120,7 +136,7 @@ export default function AddSlideModal({
   const [value, setValue] = useState<Slide>({
     title: "",
     richEditor: "",
-    bulletPoints: [], 
+    bulletPoints: [],
     slideId: generateRandomId(),
   });
 
@@ -219,7 +235,7 @@ export default function AddSlideModal({
                 />
 
                 <div className="">
-                  <Label htmlFor="rich" className=" text-lg font-bold">
+                  <Label htmlFor="rich" className="text-lg font-bold">
                     Content <span className="text-foreground/70">(notes)</span>
                   </Label>
                   <MinimalTiptapEditor

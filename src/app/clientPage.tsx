@@ -137,13 +137,13 @@ export default function ClientPage({ user }: { user: User }) {
         )}
 
         <ScrollArea
-          className={`${(lists?.length ?? 0) < 5 ? "h-full" : "h-52"} l`}
+          className={`${(lists?.length ?? 0) < 5 ? "h-full" : "h-52 pr-2.5"} l`}
         >
           {lists?.map((list) => (
             <motion.div
               layout
               key={list.list_id}
-              className="relative mb-2 flex size-full w-64 justify-between gap-3 overflow-hidden rounded-xl border bg-background px-3 py-2 transition-all hover:border-primary"
+              className="relative mb-2 max-h-20 h-fit flex size-full w-64 justify-between gap-3 overflow-hidden rounded-xl border bg-background px-3 py-2 transition-all hover:border-primary"
             >
               <Link
                 href={`/list/${list.list_id}`}

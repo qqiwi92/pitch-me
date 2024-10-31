@@ -25,7 +25,7 @@ export default function Page() {
   } = useList();
   if (isLoading) {
     return (
-      <div className="mx-auto flex max-w-xl flex-col items-center justify-center gap-5 py-24">
+      <div className="mx-auto flex max-w-xl flex-col bg-background items-center min-h-screen justify-center gap-5 mt-24">
         <Link
           href={"/"}
           className="group left-5 top-2 mb-5 mr-auto flex items-center justify-center gap-2 text-xl font-bold underline md:fixed"
@@ -98,7 +98,7 @@ export default function Page() {
     );
   }
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-24">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background py-24">
       <Link
         href={"/"}
         className="group left-5 top-2 mb-5 mr-auto flex items-center justify-center gap-2 text-xl font-bold underline md:fixed"

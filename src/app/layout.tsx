@@ -7,8 +7,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import Header from "@/components/ui/header";
 import { ListProvider } from "@/components/utils/providers/listProvider";
-import { createClient } from "@/components/utils/supabase/server";
-import { redirect } from "next/navigation";
 const montserrat = Montserrat({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
@@ -121,19 +119,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
 
   return (
-    <html lang="en" className="remove-scrollbar">
-      <body className={montserrat.className + " remove-scrollbar dark"}>
+    <html lang="en" className="remove-scrollbar bg-background">
+      <body className={montserrat.className + " remove-scrollbar dark min-h-[100vh] bg-background"}>
         <QueryProvider>
           <ListProvider>
             <div
               vaul-drawer-wrapper=""
-              className="remove-scrollbar mx-auto max-w-6xl bg-background px-3 text-foreground"
+              className="remove-scrollbar mx-auto max-w-6xl bg-background px-3 text-foreground "
             >
-              {" "}
               <Header />
               {children}
             </div>
