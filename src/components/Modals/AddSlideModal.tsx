@@ -48,13 +48,7 @@ import useLocalStorageState from "use-local-storage-state";
 interface IModal {
   list: Slide[];
   setItems: setList;
-  OpenButton: ({
-    openedSlide,
-    setOpenedSlide,
-  }: {
-    openedSlide: number;
-    setOpenedSlide: React.Dispatch<React.SetStateAction<number>>;
-  }) => ReactElement;
+
   openedSlide: number;
   setOpenedSlide: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -64,7 +58,6 @@ export default function AddSlideModal({
   openedSlide,
   setOpenedSlide,
   setItems,
-  OpenButton,
 }: IModal) {
   const formSchema = z.object({
     title: z
@@ -90,6 +83,7 @@ export default function AddSlideModal({
       richEditor: "",
       bulletPoints: [],
       slideId: generateRandomId(),
+      neededTime: 0,
     },
   });
   const form = useForm<z.infer<typeof formSchema>>({
@@ -99,11 +93,10 @@ export default function AddSlideModal({
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Check for duplicate titles
     const isDuplicateTitle = list.some(
-      (slide) => slide.title.toLowerCase() === values.title.toLowerCase()
+      (slide) => slide.title.toLowerCase() === values.title.toLowerCase(),
     );
-  
+
     if (isDuplicateTitle) {
       form.setError("title", {
         type: "manual",
@@ -111,33 +104,31 @@ export default function AddSlideModal({
       });
       return;
     }
-  
-    // Proceed if the title is unique
+
     setValue({
       ...values,
       richEditor: values.richEditor ?? "",
       bulletPoints: values.bulletPoints ?? [],
       slideId: generateRandomId(),
+      neededTime: 2,
     });
-    setItems([...list, value]);
+    setItems([...list, {...value, neededTime: 2}]);
     setValue({
       title: "",
       richEditor: "",
       bulletPoints: [],
       slideId: generateRandomId(),
+      neededTime: 2,
     });
     setOpenedSlide(-2);
   }
-  
-  const Trigger = OpenButton({
-    openedSlide: openedSlide,
-    setOpenedSlide: setOpenedSlide,
-  });
+
   const [value, setValue] = useState<Slide>({
     title: "",
     richEditor: "",
     bulletPoints: [],
     slideId: generateRandomId(),
+    neededTime: 0,
   });
 
   useEffect(() => {
@@ -147,6 +138,7 @@ export default function AddSlideModal({
           title: "",
           richEditor: "",
           bulletPoints: [],
+          neededTime: 0
         },
       );
     } else if (openedSlide > -1) {
@@ -179,7 +171,6 @@ export default function AddSlideModal({
           if (openedSlide > -2) setOpenedSlide(-2);
         }}
       >
-        <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
         <CredenzaContent className="z-[50]">
           <CredenzaHeader>
             <CredenzaTitle>

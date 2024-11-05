@@ -3,7 +3,7 @@ import { nextui } from "@nextui-org/react";
 
 const config = {
   darkMode: ["class"],
-  safelist: ['dark', 'ProseMirror'],
+  safelist: ["dark", "ProseMirror"],
 
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -102,6 +102,10 @@ const config = {
             backgroundPosition: "var(--bg-size) 0",
           },
         },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
@@ -110,6 +114,7 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         shine: "shine 8s ease-in-out infinite",
         gradient: "gradient 8s linear infinite",
+        fadeIn: "fadeIn 0.5s ease forwards",
       },
     },
   },

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toast/toaster";
 import QueryProvider from "@/components/utils/providers/queryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import Header from "@/components/ui/header";
 import { ListProvider } from "@/components/utils/providers/listProvider";
@@ -119,21 +120,27 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en" className="remove-scrollbar bg-background">
-      <body className={montserrat.className + " remove-scrollbar dark min-h-[100vh] bg-background"}>
+      <body
+        className={
+          montserrat.className +
+          " remove-scrollbar min-h-[100vh] bg-background dark"
+        }
+      >
         <QueryProvider>
-          <ListProvider>
-            <div
-              vaul-drawer-wrapper=""
-              className="remove-scrollbar mx-auto max-w-6xl bg-background px-3 text-foreground "
-            >
-              <Header />
-              {children}
-            </div>
-          </ListProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          <NuqsAdapter>
+            <ListProvider>
+              <div
+                vaul-drawer-wrapper=""
+                className="remove-scrollbar mx-auto max-w-6xl bg-background px-3 text-foreground"
+              >
+                <Header />
+                {children}
+              </div>
+            </ListProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </NuqsAdapter>
         </QueryProvider>
         <Toaster />
       </body>

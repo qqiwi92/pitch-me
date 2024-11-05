@@ -17,14 +17,13 @@ import { DirectionAwareTabs } from "../ui/tabs";
 import { List, Slide } from "@/lib/types";
 import { downloadPptx } from "./downloadPptx";
 interface IModal {
-  OpenButton: () => ReactElement;
-  list: Slide[];
+  open:boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    list: Slide[];
   currentInfo: List;
 }
 
-export default function ExportModal({ OpenButton, list, currentInfo }: IModal) {
-  const [open, setOpen] = useState(false);
-  const Trigger = OpenButton();
+export default function ExportModal({ open,setOpen, list, currentInfo }: IModal) {
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState(false);
   const tabs = [
@@ -94,7 +93,6 @@ export default function ExportModal({ OpenButton, list, currentInfo }: IModal) {
         } pointer-events-none transition duration-500`}
       ></div>
       <Credenza open={open} onOpenChange={setOpen}>
-        <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
         <CredenzaContent className="z-[100]">
           <CredenzaHeader>
             <CredenzaTitle>Export data</CredenzaTitle>

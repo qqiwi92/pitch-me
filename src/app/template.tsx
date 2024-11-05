@@ -13,7 +13,12 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
       const { data, error } = await supabase.auth.getUser();
       if (error || !data?.user) {
-        pathname !== "/login" && pathname !== "/error" && redirect("/login");
+        if (pathname !== "/login" && pathname !== "/error") {
+          redirect("/login");
+        }
+      }
+      if (pathname === "/login") {
+        redirect("/");
       }
     };
 

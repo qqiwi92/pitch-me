@@ -39,5 +39,6 @@ export type Slide = {
   richEditor: string;
   bulletPoints: BulletPoint[];
   slideId: string;
+  neededTime: number; // in minutes
 };
 export type setList = (newSlide: Slide[]) => void;

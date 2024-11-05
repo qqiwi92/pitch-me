@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { List, Slide } from "./types";
 import { useToast } from "@/components/ui/toast/use-toast";
+import { useQueryState } from "nuqs";
 
 export const useList = () => {
   const queryKey = ["list"];
@@ -20,10 +21,15 @@ export const useList = () => {
   const supabase = createClient();
   const [openedSlide, setOpenedSlide] = useState(-2);
   const queryClient = useQueryClient();
-
+  const [mode] = useQueryState("mode");
+  const [modal] = useQueryState("modal");
   useEffect(() => {
-    setIsFetching(true);
-    queryClient.invalidateQueries({ queryKey: ["list"] });
+    if (!mode && !modal) {
+      setIsFetching(true);
+      queryClient.invalidateQueries({ queryKey: ["list"] });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, queryClient]);
 
   const { data: items, isLoading } = useQuery({
@@ -87,7 +93,7 @@ export const useList = () => {
   const setItems = (newSlide: Slide[]) => updateSlides({ newSlide });
 
   return {
-    items,
+    items: items ?? [],
     isLoading: isLoading || isFetching,
     setItems,
     setOpenedSlide,

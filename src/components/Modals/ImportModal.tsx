@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import React, { ReactElement, useRef, useState } from "react";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { DirectionAwareTabs } from "../ui/tabs";
-import { AImportStatus, Slide, validateJsonOnValueType, } from "@/lib/types";
+import { AImportStatus, Slide, validateJsonOnValueType } from "@/lib/types";
 import { motion } from "framer-motion";
 import { useToast } from "../ui/toast/use-toast";
 import { examples } from "@/lib/data/examples";
@@ -25,15 +25,14 @@ import { useMutation } from "@tanstack/react-query";
 import useLocalStorageState from "use-local-storage-state";
 
 interface IModal {
-  OpenButton: () => ReactElement;
+  open:boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setList: (newSlide: Slide[]) => void;
 }
 export const runtime = "edge";
 
-export default function ImportModal({ OpenButton,  setList }: IModal) {
-  // state
-  const [open, setOpen] = useState(false);
-  const Trigger = OpenButton();
+export default function ImportModal({ open,setOpen, setList }: IModal) {
+
   const [activeTab, setActiveTab] = useState(0);
   const [validated, setValidated] = useState(false);
   const [fileContent, setFileContent] = useLocalStorageState("importJson", {
@@ -51,7 +50,9 @@ export default function ImportModal({ OpenButton,  setList }: IModal) {
         // server_generateSchema();
       }
       if (response.status === "success") {
-        setFileContent(JSON.stringify(JSON.parse(response.message.trim()), null, 2) );
+        setFileContent(
+          JSON.stringify(JSON.parse(response.message.trim()), null, 2),
+        );
         setActiveTab(0);
         setValidated(true);
         toast({
@@ -287,7 +288,6 @@ export default function ImportModal({ OpenButton,  setList }: IModal) {
         } pointer-events-none transition duration-500`}
       ></div>
       <Credenza open={open} onOpenChange={setOpen}>
-        <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
         <CredenzaContent className="remove-scrollbar z-[100]">
           <CredenzaHeader>
             <CredenzaTitle>Import data</CredenzaTitle>

@@ -38,12 +38,11 @@ import { Slide } from "@/lib/types";
 interface IModal {
   list: Slide[];
   setList: (newSlide: Slide[]) => void;
-  OpenButton: () => ReactElement;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ReorderModal({ list, setList, OpenButton }: IModal) {
-  const [open, setOpen] = useState(false);
-  const Trigger = OpenButton();
+export default function ReorderModal({ list, setList, open, setOpen }: IModal) {
   return (
     <>
       <div
@@ -52,7 +51,6 @@ export default function ReorderModal({ list, setList, OpenButton }: IModal) {
         } pointer-events-none transition duration-500`}
       ></div>
       <Credenza open={open} onOpenChange={() => setOpen(!open)}>
-        <CredenzaTrigger asChild>{Trigger}</CredenzaTrigger>
         <CredenzaContent className="z-[50]">
           <CredenzaHeader>
             <CredenzaTitle>Reorder slides</CredenzaTitle>
@@ -67,7 +65,7 @@ export default function ReorderModal({ list, setList, OpenButton }: IModal) {
                   <Reorder.Item
                     key={item.title}
                     value={item}
-                    className="my-2 rounded-xl cursor-move border bg-background px-4 py-1"
+                    className="my-2 cursor-move rounded-xl border bg-background px-4 py-1"
                   >
                     <span className="pr-2 text-foreground/50">
                       {i.toString().length === 1 ? `0${i}` : i}{" "}
