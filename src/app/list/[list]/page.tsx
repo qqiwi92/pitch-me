@@ -232,7 +232,12 @@ export default function Page() {
                 </span>
               </PopoverContent>
             </Popover>
-            <PresentationButton changeMode={() => setMode("presenting")} />
+            <PresentationButton
+              changeMode={() => {
+                setMode("presenting");
+                setIndex(-1)
+              }}
+            />
           </div>
         </div>
       </div>

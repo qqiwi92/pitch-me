@@ -166,7 +166,7 @@ export default function Presentation() {
               Presentation Timeline
             </h2>
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 hidden sm:block">
                 (Drag middle dots to adjust individual slide durations)
               </p>
             </div>
@@ -174,7 +174,7 @@ export default function Presentation() {
               width="500"
               height="200"
               viewBox="0 0 500 200"
-              className="mx-auto mb-4"
+              className="mx-auto mb-4 hidden sm:block"
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
