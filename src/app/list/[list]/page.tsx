@@ -19,6 +19,7 @@ import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { Separator } from "@/components/ui/separator";
 import {
   ChevronLeft,
+  CircleEllipsis,
   FilePenLine,
   Gauge,
   Pause,
@@ -211,7 +212,7 @@ export default function Page() {
                   id="editList"
                   className="flex items-center justify-start gap-2"
                 >
-                  <Pencil className="size-5" />
+                  <CircleEllipsis  className="size-6 stroke-[2px] text-2xl" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -235,7 +236,7 @@ export default function Page() {
             <PresentationButton
               changeMode={() => {
                 setMode("presenting");
-                setIndex(-1)
+                setIndex(-1);
               }}
             />
           </div>
@@ -243,7 +244,7 @@ export default function Page() {
       </div>
       <ImportModal
         setList={setItems}
-        setOpen={() => setOpenedModal("")}
+        setOpen={() => setOpenedModal("none")}
         open={openedModal === "import"}
       />
 
@@ -255,14 +256,14 @@ export default function Page() {
       />
       <ExportModal
         open={openedModal === "export"}
-        setOpen={() => setOpenedModal("")}
+        setOpen={() => setOpenedModal("none")}
         currentInfo={currentInfo}
         list={items ?? []}
       />
       <ReorderModal
         list={items ?? []}
         open={openedModal === "reorder"}
-        setOpen={() => setOpenedModal("")}
+        setOpen={() => setOpenedModal("none")}
         setList={setItems}
       />
     </div>

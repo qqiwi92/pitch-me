@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "../button";
 import { Progress } from "../progress";
+import { TextMorph } from "../text-morph";
 
 export default function Presentation() {
   const { items: slides, setItems: setSlides } = useList();
@@ -161,12 +162,12 @@ export default function Presentation() {
     <div className="flex flex-col items-center justify-center p-4">
       <div className="mt-4 w-full max-w-2xl">
         {index === -1 ? (
-          <div className="animate-fadeIn z-[100] flex w-full max-w-2xl flex-col items-center justify-center rounded-lg border p-3 shadow-lg sm:p-6">
+          <div className="z-[100] flex w-full max-w-2xl animate-fadeIn flex-col items-center justify-center rounded-lg border p-3 shadow-lg sm:p-6">
             <h2 className="mb-4 text-center text-2xl font-bold">
               Presentation Timeline
             </h2>
             <div className="text-center">
-              <p className="text-sm text-gray-600 hidden sm:block">
+              <p className="hidden text-sm text-gray-600 sm:block">
                 (Drag middle dots to adjust individual slide durations)
               </p>
             </div>
@@ -258,43 +259,73 @@ export default function Presentation() {
             <Button onClick={() => setIndex(0)}>Start pitching</Button>
           </div>
         ) : (
-          <Carousel
-            index={index ?? 0}
-            className="animate-fadeIn"
-            onIndexChange={(i) => {
-              if (-1 <= i && i <= slides.length) {
-                setIndex(i);
-              }
-            }}
-          >
-            <CarouselContent className="relative h-full w-full max-w-xs sm:max-w-xl md:max-w-3xl">
-              {slides.map((slide, index) => (
-                <CarouselItem className="h-full px-2" key={index}>
-                  <div
-                    key={index}
-                    className={`min-h-[300px] w-full rounded-xl border ${mode === "running" && ((currentIntervalData?.currentInterval ?? 0) > index ? "border-red-600" : (currentIntervalData?.currentInterval ?? 0) < index ? "border-blue-600" : "border-green-600")} p-3 sm:min-h-[200px]`}
-                  >
-                    <h4 className="font-bold">{slide.title}</h4>
-                    {mode === "running" &&
-                      index === currentIntervalData?.currentInterval && (
-                        <Progress
-                          className="my-2"
-                          value={Number(currentIntervalData.percentagePassed)}
-                        />
+          <div className="">
+            <span className="flex px-2 items-center justify-between gap-1 text-foreground/75">
+              <span className="flex gap-2">
+                {" "}
+                Slide:{" "}
+                <span className="font-bold text-foreground">
+                  <TextMorph>{String((index ?? 0) + 1)}</TextMorph>
+                </span>{" "}
+              </span>
+
+              <span className="flex ">
+                <TextMorph>{String(totalDuration- ~~(currentSeconds / 60))}</TextMorph>.
+                <TextMorph>{String(60- ~~(currentSeconds % 60))}</TextMorph>
+              </span>
+            </span>
+            <Carousel
+              index={index ?? 0}
+              className="animate-fadeIn"
+              onIndexChange={(i) => {
+                if (-1 <= i && i <= slides.length) {
+                  setIndex(i);
+                }
+              }}
+            >
+              <CarouselContent className="relative h-full w-full max-w-xs sm:max-w-xl md:max-w-3xl">
+                {slides.map((slide, index) => (
+                  <CarouselItem className="h-full px-2" key={index}>
+                    <div
+                      key={index}
+                      className={`min-h-[300px] w-full rounded-xl border bg-card ${mode === "running" && ((currentIntervalData?.currentInterval ?? 0) > index ? "border-red-400" : (currentIntervalData?.currentInterval ?? 0) < index ? "border-blue-400" : "border-accent")} p-3 sm:min-h-[200px]`}
+                    >
+                      <h4 className="font-bold">{slide.title}</h4>
+                      {mode === "running" &&
+                        index === currentIntervalData?.currentInterval && (
+                          <Progress
+                            className="my-2"
+                            value={Number(currentIntervalData.percentagePassed)}
+                          />
+                        )}
+                      {currentIntervalData?.currentInterval === index ? (
+                        <p>
+                          Time left:{" "}
+                          {parseFloat(
+                            Number(
+                              currentIntervalData?.percentagePassed,
+                            ).toFixed(0),
+                          )}
+                          % of {slide.neededTime.toFixed(1)} minutes
+                        </p>
+                      ) : (
+                        <p>Duration: {slide.neededTime.toFixed(1)} minutes</p>
                       )}
-                    <p>Duration: {slide.neededTime.toFixed(1)} minutes</p>
-                    <p className="text-sm text-gray-600">{slide.richEditor}</p>
-                    <ul className="mt-2 list-disc pl-5">
-                      {slide.bulletPoints.map((point) => (
-                        <li key={point.id}>{point.text}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselIndicator className="translate-y-5" />
-          </Carousel>
+                      <p className="text-sm text-gray-600">
+                        {slide.richEditor}
+                      </p>
+                      <ul className="mt-2 list-disc pl-5">
+                        {slide.bulletPoints.map((point) => (
+                          <li key={point.id}>{point.text}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselIndicator className="translate-y-5" />
+            </Carousel>
+          </div>
         )}
       </div>
     </div>

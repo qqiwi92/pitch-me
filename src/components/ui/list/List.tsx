@@ -76,7 +76,7 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               key={item.title + item.slideId}
-              className="w-full rounded-xl border p-4"
+              className="w-full rounded-xl border p-4 bg-card"
             >
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold">{item.title}</h2>
@@ -85,10 +85,10 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
                     onClick={() => {
                       setItems(items.filter((i) => i.title !== item.title));
                     }}
-                    className="cursor-pointer text-lg text-foreground/50 transition-colors hover:text-destructive"
+                    className="cursor-pointer size-8 hover:bg-card-foreground/10 rounded-xl p-1.5 text-lg text-foreground/50 transition-colors hover:text-destructive"
                   />
                   <MdModeEditOutline
-                    className="cursor-pointer text-lg text-foreground/50 transition-colors hover:text-primary"
+                    className="cursor-pointer size-8 hover:bg-card-foreground/10 rounded-xl p-1.5 text-lg text-foreground/50 transition-colors hover:text-accent"
                     onClick={() => setOpenedSlide(i)}
                   />
                 </div>

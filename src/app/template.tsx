@@ -17,9 +17,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
           redirect("/login");
         }
       }
-      if (pathname === "/login") {
-        redirect("/");
-      }
+     
     };
 
     checkAuth();

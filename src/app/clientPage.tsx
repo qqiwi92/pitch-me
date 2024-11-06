@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -143,7 +143,7 @@ export default function ClientPage({ user }: { user: User }) {
             <motion.div
               layout
               key={list.list_id}
-              className="relative mb-2 max-h-20 h-fit flex size-full w-64 justify-between gap-3 overflow-hidden rounded-xl border bg-background px-3 py-2 transition-all hover:border-primary"
+              className="relative mb-2 max-h-20 bg-card h-fit flex size-full w-64 justify-between gap-3 overflow-hidden rounded-xl border hover:bg-background px-3 py-2 transition-all hover:border-primary"
             >
               <Link
                 href={`/list/${list.list_id}`}
@@ -164,26 +164,27 @@ export default function ClientPage({ user }: { user: User }) {
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-32 p-2" align="end">
+                <PopoverContent className="w-32 p-1" align="end">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start hover:bg-foreground/20 hover:text-white"
+                    className="w-full  flex gap-2 items-center px-2 py-1  justify-start hover:bg-foreground/20 hover:text-white"
                     onClick={() => {
                       setEditName(list.list_name);
                       setCurrentListId(list.list_id);
                       setIsOpen(true);
                     }}
                   >
+                    <Pencil className="size-4 stroke-[1.5px]" />
                     Edit
                   </Button>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-destructive hover:bg-destructive/20 hover:text-destructive"
+                    className="w-full flex gap-2 items-center px-2 py-1   justify-start text-destructive hover:bg-destructive/20 hover:text-destructive"
                     onClick={() => {
                       setCurrentListId(list.list_id);
                       setIsDeleteOpen(true);
                     }}
-                  >
+                  ><Trash2 className="size-4 stroke-[1.5px]"/>
                     Delete
                   </Button>
                 </PopoverContent>
