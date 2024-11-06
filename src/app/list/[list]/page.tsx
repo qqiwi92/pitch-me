@@ -212,7 +212,7 @@ export default function Page() {
                   id="editList"
                   className="flex items-center justify-start gap-2"
                 >
-                  <CircleEllipsis  className="size-6 stroke-[2px] text-2xl" />
+                  <CircleEllipsis className="size-6 stroke-[2px] text-2xl" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -355,7 +355,11 @@ function PresentationButton({ changeMode }: { changeMode: () => void }) {
           }}
           variant={"ghost"}
         >
-          <Settings className="stroke-[2px] text-2xl" />
+          {index === -1 ? (
+            <PresentationIcon className="stroke-[2px] text-2xl" />
+          ) : (
+            <Settings className="stroke-[2px] text-2xl" />
+          )}
         </Button>
       )}
     </>

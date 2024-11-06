@@ -15,6 +15,7 @@ import {
 import { Button } from "../button";
 import { Progress } from "../progress";
 import { TextMorph } from "../text-morph";
+import { ArrowLeft } from "lucide-react";
 
 export default function Presentation() {
   const { items: slides, setItems: setSlides } = useList();
@@ -167,7 +168,7 @@ export default function Presentation() {
               Presentation Timeline
             </h2>
             <div className="text-center">
-              <p className="hidden text-sm text-gray-600 sm:block">
+              <p className="hidden text-sm sm:block">
                 (Drag middle dots to adjust individual slide durations)
               </p>
             </div>
@@ -239,10 +240,11 @@ export default function Presentation() {
               ))}
             </svg>
 
+           
             <div className="mb-4 w-full">
               <label
                 htmlFor="duration-slider"
-                className="mb-1 block text-sm font-medium text-gray-700"
+                className="mb-1 block text-sm font-medium"
               >
                 Total Duration: {totalDuration.toFixed(1)} minutes
               </label>
@@ -260,7 +262,7 @@ export default function Presentation() {
           </div>
         ) : (
           <div className="">
-            <span className="flex px-2 items-center justify-between gap-1 text-foreground/75">
+            <span className="flex items-center justify-between gap-1 px-2 text-foreground/75">
               <span className="flex gap-2">
                 {" "}
                 Slide:{" "}
@@ -268,63 +270,90 @@ export default function Presentation() {
                   <TextMorph>{String((index ?? 0) + 1)}</TextMorph>
                 </span>{" "}
               </span>
-
-              <span className="flex ">
-                <TextMorph>{String(totalDuration- ~~(currentSeconds / 60))}</TextMorph>.
-                <TextMorph>{String(60- ~~(currentSeconds % 60))}</TextMorph>
-              </span>
+              {mode === "running" && (
+                <span className="flex">
+                  <TextMorph>
+                    {String(totalDuration - ~~(currentSeconds / 60))}
+                  </TextMorph>
+                  .<TextMorph>{String(60 - ~~(currentSeconds % 60))}</TextMorph>
+                </span>
+              )}
             </span>
-            <Carousel
-              index={index ?? 0}
-              className="animate-fadeIn"
-              onIndexChange={(i) => {
-                if (-1 <= i && i <= slides.length) {
-                  setIndex(i);
-                }
-              }}
-            >
-              <CarouselContent className="relative h-full w-full max-w-xs sm:max-w-xl md:max-w-3xl">
-                {slides.map((slide, index) => (
-                  <CarouselItem className="h-full px-2" key={index}>
-                    <div
-                      key={index}
-                      className={`min-h-[300px] w-full rounded-xl border bg-card ${mode === "running" && ((currentIntervalData?.currentInterval ?? 0) > index ? "border-red-400" : (currentIntervalData?.currentInterval ?? 0) < index ? "border-blue-400" : "border-accent")} p-3 sm:min-h-[200px]`}
-                    >
-                      <h4 className="font-bold">{slide.title}</h4>
-                      {mode === "running" &&
-                        index === currentIntervalData?.currentInterval && (
-                          <Progress
-                            className="my-2"
-                            value={Number(currentIntervalData.percentagePassed)}
-                          />
-                        )}
-                      {currentIntervalData?.currentInterval === index ? (
-                        <p>
-                          Time left:{" "}
-                          {parseFloat(
-                            Number(
-                              currentIntervalData?.percentagePassed,
-                            ).toFixed(0),
+            <div className="relative">
+              <Carousel
+                index={index ?? 0}
+                className="animate-fadeIn"
+                onIndexChange={(i) => {
+                  if (-1 <= i && i <= slides.length) {
+                    setIndex(i);
+                  }
+                }}
+              >
+                <CarouselContent className="relative h-full w-full max-w-xs sm:max-w-xl md:max-w-3xl">
+                  {slides.map((slide, index) => (
+                    <CarouselItem className="h-full px-2" key={index}>
+                      <div
+                        key={index}
+                        className={`min-h-[300px] w-full rounded-xl border bg-card transition-all ${mode === "running" ? ((currentIntervalData?.currentInterval ?? 0) > index ? "border-red-400" : (currentIntervalData?.currentInterval ?? 0) < index ? "border-blue-400" : "border-accent") : "border-transparent"} p-3 sm:min-h-[200px]`}
+                      >
+                        <h4 className="font-bold">{slide.title}</h4>
+                        {mode === "running" &&
+                          index === currentIntervalData?.currentInterval && (
+                            <Progress
+                              className="my-2"
+                              value={Number(
+                                currentIntervalData.percentagePassed,
+                              )}
+                            />
                           )}
-                          % of {slide.neededTime.toFixed(1)} minutes
+                        {currentIntervalData?.currentInterval === index ? (
+                          <p>
+                            Time left:{" "}
+                            {parseFloat(
+                              Number(
+                                currentIntervalData?.percentagePassed,
+                              ).toFixed(0),
+                            )}
+                            % of {slide.neededTime.toFixed(1)} minutes
+                          </p>
+                        ) : (
+                          <p>Duration: {slide.neededTime.toFixed(1)} minutes</p>
+                        )}
+                        <p className="text-sm text-gray-600">
+                          {slide.richEditor}
                         </p>
-                      ) : (
-                        <p>Duration: {slide.neededTime.toFixed(1)} minutes</p>
-                      )}
-                      <p className="text-sm text-gray-600">
-                        {slide.richEditor}
-                      </p>
-                      <ul className="mt-2 list-disc pl-5">
-                        {slide.bulletPoints.map((point) => (
-                          <li key={point.id}>{point.text}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselIndicator className="translate-y-5" />
-            </Carousel>
+                        <ul className="mt-2 list-disc pl-5">
+                          {slide.bulletPoints.map((point) => (
+                            <li key={point.id}>{point.text}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselIndicator className="translate-y-5" />
+              </Carousel>
+              <span
+                onClick={() => {
+                  if ((index ?? 0) > 0) {
+                    setIndex((index ?? 0) - 1);
+                  }
+                }}
+                className={`${(index ?? 0) <= 0 ? "pointer-events-none opacity-0" : "opacity-100"} absolute -left-7 bottom-0 top-0 flex cursor-pointer items-center justify-center rounded-l-xl rounded-r-md border border-transparent text-foreground/50 transition-all hover:border-border hover:bg-card hover:text-foreground`}
+              >
+                <ArrowLeft />
+              </span>
+              <span
+                onClick={() => {
+                  if ((index ?? 0) < slides.length - 1) {
+                    setIndex((index ?? 0) + 1);
+                  }
+                }}
+                className={`${(index ?? 0) >= slides.length - 1 ? "pointer-events-none opacity-0" : "opacity-100"} absolute -right-7 bottom-0 top-0 flex cursor-pointer items-center justify-center rounded-l-md rounded-r-xl border border-transparent text-foreground/50 transition-all hover:border-border hover:bg-card hover:text-foreground`}
+              >
+                <ArrowLeft className="rotate-180" />
+              </span>
+            </div>
           </div>
         )}
       </div>
