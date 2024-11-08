@@ -168,8 +168,9 @@ export default function Presentation() {
   const currentIntervalData = getCurrentInterval();
 
   useEffect(() => {
-    setIndex(currentIntervalData?.currentInterval ?? 0);
-  }, [ setIndex]);
+    if (presentationSettings?.includes("a"))
+      setIndex(currentIntervalData?.currentInterval ?? 0);
+  }, [setIndex]);
   if (slides.length === 0) {
     setMode("editing");
     return null;
@@ -397,7 +398,7 @@ export default function Presentation() {
                           }}
                         />
                         <label
-                          htmlFor="description-checkbox"
+                          htmlFor="auto-checkbox"
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
                           <span className="font-bold">Auto swiping </span>
@@ -428,7 +429,13 @@ export default function Presentation() {
               {mode === "running" && (
                 <span className="flex">
                   <TextMorph>
-                    {String(parseFloat(Number(totalDuration - ~~(currentSeconds / 60)).toFixed(2)))}
+                    {String(
+                      parseFloat(
+                        Number(totalDuration - ~~(currentSeconds / 60)).toFixed(
+                          2,
+                        ),
+                      ),
+                    )}
                   </TextMorph>
                   .
                   <TextMorph>
@@ -458,7 +465,7 @@ export default function Presentation() {
                           className={`font-bold ${((presentationSettings ?? "").includes("l") || (presentationSettings ?? "").includes("d")) && "text-4xl"}`}
                         >
                           {slide.title}
-                          <Separator/>
+                          <Separator />
                         </h4>
                         {mode === "running" &&
                           index === currentIntervalData?.currentInterval && (
