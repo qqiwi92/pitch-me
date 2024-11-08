@@ -5,6 +5,8 @@ import { line, curveMonotoneX } from "d3-shape";
 import { Slider } from "@/components/ui/slider";
 import { useList } from "@/lib/fetchingList";
 import { parseAsInteger, useQueryState } from "nuqs";
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { motion } from "framer-motion";
 import {
   Carousel,
@@ -16,6 +18,7 @@ import { Button } from "../button";
 import { Progress } from "../progress";
 import { TextMorph } from "../text-morph";
 import { ArrowLeft } from "lucide-react";
+import { Separator } from "../separator";
 
 export default function Presentation() {
   const { items: slides, setItems: setSlides } = useList();
@@ -59,7 +62,14 @@ export default function Presentation() {
       setDraggedDot(index);
     }
   };
-
+  const [presentationSettings, setPresentationSettings] = useQueryState(
+    "presentation-settings",
+  ); // d = description, l = list, a = auto swiping
+  useEffect(() => {
+    if (!presentationSettings) {
+      setPresentationSettings("dla"); // d = description, l = list, a = auto swiping
+    }
+  }, []);
   const handleMouseMove = useCallback(
     (event: React.MouseEvent<SVGSVGElement>) => {
       if (
@@ -123,7 +133,7 @@ export default function Presentation() {
       if (interval) clearInterval(interval);
     };
     // eslint-disable-next-line
-  }, [mode, totalDuration, currentSeconds]);
+  }, [mode]);
   const getCurrentInterval = () => {
     const currentTimeInSeconds = currentSeconds;
 
@@ -156,9 +166,15 @@ export default function Presentation() {
     return null;
   };
   const currentIntervalData = getCurrentInterval();
+
   useEffect(() => {
     setIndex(currentIntervalData?.currentInterval ?? 0);
-  }, [currentIntervalData?.currentInterval, setIndex]);
+  }, [ setIndex]);
+  if (slides.length === 0) {
+    setMode("editing");
+    return null;
+  }
+
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <div className="mt-4 w-full max-w-2xl">
@@ -240,7 +256,6 @@ export default function Presentation() {
               ))}
             </svg>
 
-           
             <div className="mb-4 w-full">
               <label
                 htmlFor="duration-slider"
@@ -257,8 +272,148 @@ export default function Presentation() {
                 onValueChange={handleTotalDurationChange}
               />
             </div>
+            <div className="w-full">
+              <h2 className="mb-4 text-center text-2xl font-bold">
+                Other options
+              </h2>
+              <div className="">
+                <div className="mb-2">
+                  <h3 className="font-semibold">Display:</h3>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="title-checkbox" checked disabled />
+                        <label
+                          htmlFor="title-checkbox"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Title
+                        </label>
+                      </div>
+                      <div className="flex cursor-pointer items-center space-x-2">
+                        <Checkbox
+                          id="description-checkbox"
+                          checked={(presentationSettings ?? "").includes("d")}
+                          onCheckedChange={() => {
+                            if ((presentationSettings ?? "").includes("d")) {
+                              setPresentationSettings(
+                                (presentationSettings ?? "").replace("d", ""),
+                              );
+                            } else {
+                              setPresentationSettings(
+                                (presentationSettings ?? "")
+                                  .replace("d", "")
+                                  .concat("d"),
+                              );
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="description-checkbox"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          description
+                        </label>
+                      </div>
+                      <div className="flex cursor-pointer items-center space-x-2">
+                        <Checkbox
+                          id="points-checkbox"
+                          checked={(presentationSettings ?? "").includes("l")}
+                          onCheckedChange={() => {
+                            if ((presentationSettings ?? "").includes("l")) {
+                              setPresentationSettings(
+                                (presentationSettings ?? "").replace("l", ""),
+                              );
+                            } else {
+                              setPresentationSettings(
+                                (presentationSettings ?? "")
+                                  .replace("l", "")
+                                  .concat("l"),
+                              );
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="points-checkbox"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          points
+                        </label>
+                      </div>
+                    </div>
+                    <div className="mx-auto flex h-24 w-48 flex-col items-center justify-center gap-2 rounded-xl bg-card p-2">
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        layout
+                        className="mx-auto h-4 w-20 rounded-md bg-foreground/20"
+                      ></motion.div>
+                      {(presentationSettings ?? "").indexOf("d") !== -1 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          layout
+                          className="mx-auto h-5 w-32 rounded-md bg-foreground/15"
+                        ></motion.div>
+                      )}
+                      {(presentationSettings ?? "").indexOf("l") !== -1 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          layout
+                          className="flex flex-col gap-1"
+                        >
+                          <div className="mx-auto h-1 w-20 rounded-md bg-foreground/20"></div>
+                          <div className="mx-auto h-1 w-20 rounded-md bg-foreground/20"></div>
+                          <div className="mx-auto h-1 w-20 rounded-md bg-foreground/20"></div>
+                        </motion.div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-2">
+                  <h3 className="font-semibold">Other settings:</h3>
+                  <div className="mt-2 flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex cursor-pointer items-center space-x-2">
+                        <Checkbox
+                          id="auto-checkbox"
+                          checked={(presentationSettings ?? "").includes("a")}
+                          onCheckedChange={() => {
+                            if ((presentationSettings ?? "").includes("a")) {
+                              setPresentationSettings(
+                                (presentationSettings ?? "").replace("a", ""),
+                              );
+                            } else {
+                              setPresentationSettings(
+                                (presentationSettings ?? "")
+                                  .replace("a", "")
+                                  .concat("a"),
+                              );
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="description-checkbox"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          <span className="font-bold">Auto swiping </span>
+                          <p className="text-sm text-foreground/75">
+                            Enable auto swiping when the time for the current
+                            slide&#39;s time is up.
+                          </p>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <Button onClick={() => setIndex(0)}>Start pitching</Button>
+            {/* <Button onClick={() => setIndex(0)}>Start pitching</Button> */}
           </div>
         ) : (
           <div className="">
@@ -273,9 +428,12 @@ export default function Presentation() {
               {mode === "running" && (
                 <span className="flex">
                   <TextMorph>
-                    {String(totalDuration - ~~(currentSeconds / 60))}
+                    {String(parseFloat(Number(totalDuration - ~~(currentSeconds / 60)).toFixed(2)))}
                   </TextMorph>
-                  .<TextMorph>{String(60 - ~~(currentSeconds % 60))}</TextMorph>
+                  .
+                  <TextMorph>
+                    {String(Math.min(60 - (~~currentSeconds % 60), 59))}
+                  </TextMorph>
                 </span>
               )}
             </span>
@@ -296,7 +454,12 @@ export default function Presentation() {
                         key={index}
                         className={`min-h-[300px] w-full rounded-xl border bg-card transition-all ${mode === "running" ? ((currentIntervalData?.currentInterval ?? 0) > index ? "border-red-400" : (currentIntervalData?.currentInterval ?? 0) < index ? "border-blue-400" : "border-accent") : "border-transparent"} p-3 sm:min-h-[200px]`}
                       >
-                        <h4 className="font-bold">{slide.title}</h4>
+                        <h4
+                          className={`font-bold ${((presentationSettings ?? "").includes("l") || (presentationSettings ?? "").includes("d")) && "text-4xl"}`}
+                        >
+                          {slide.title}
+                          <Separator/>
+                        </h4>
                         {mode === "running" &&
                           index === currentIntervalData?.currentInterval && (
                             <Progress
@@ -319,14 +482,18 @@ export default function Presentation() {
                         ) : (
                           <p>Duration: {slide.neededTime.toFixed(1)} minutes</p>
                         )}
-                        <p className="text-sm text-gray-600">
-                          {slide.richEditor}
-                        </p>
-                        <ul className="mt-2 list-disc pl-5">
-                          {slide.bulletPoints.map((point) => (
-                            <li key={point.id}>{point.text}</li>
-                          ))}
-                        </ul>
+                        {(presentationSettings ?? "").includes("d") && (
+                          <p className="text-sm text-foreground/75">
+                            {slide.richEditor}
+                          </p>
+                        )}
+                        {(presentationSettings ?? "").includes("l") && (
+                          <ul className="mt-2 list-disc pl-5">
+                            {slide.bulletPoints.map((point) => (
+                              <li key={point.id}>{point.text}</li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </CarouselItem>
                   ))}

@@ -45,6 +45,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { BulletPoint, setList, Slide } from "@/lib/types";
 import useLocalStorageState from "use-local-storage-state";
+import { useQueryState } from "nuqs";
 interface IModal {
   list: Slide[];
   setItems: setList;
@@ -112,7 +113,7 @@ export default function AddSlideModal({
       slideId: generateRandomId(),
       neededTime: 2,
     });
-    setItems([...list, {...value, neededTime: 2}]);
+    setItems([...list, { ...value, neededTime: 2 }]);
     setValue({
       title: "",
       richEditor: "",
@@ -138,7 +139,7 @@ export default function AddSlideModal({
           title: "",
           richEditor: "",
           bulletPoints: [],
-          neededTime: 0
+          neededTime: 0,
         },
       );
     } else if (openedSlide > -1) {
@@ -156,6 +157,8 @@ export default function AddSlideModal({
       setValue(list[openedSlide]);
     }
   }, [openedSlide]);
+  const [openedModal, setOpenedModal] = useQueryState("modal");
+
   return (
     <>
       <div
@@ -166,9 +169,10 @@ export default function AddSlideModal({
         } pointer-events-none transition duration-500`}
       ></div>
       <Credenza
-        open={openedSlide > -2}
+        open={openedSlide > -2 || openedModal === "addSlide"}
         onOpenChange={() => {
           if (openedSlide > -2) setOpenedSlide(-2);
+          setOpenedModal('none')
         }}
       >
         <CredenzaContent className="z-[50]">

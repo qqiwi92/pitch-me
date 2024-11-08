@@ -12,6 +12,7 @@ import AnimatedGradientText from "@/components/utils/animated-gradinent-text";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import { Coolshape } from "coolshapes-react";
+import { useQueryState } from "nuqs";
 
 interface IList {
   items: Slide[];
@@ -21,18 +22,22 @@ interface IList {
 
 export default function List({ items, setItems, setOpenedSlide }: IList) {
   const [loaded, setLoaded] = useState(false);
+  const [openedModal, setOpenedModal] = useQueryState("modal");
   useEffect(() => {
     setLoaded(true);
   }, []);
   return (
     <motion.div
       layout
-      className="remove-scrollbar flex  w-full max-w-xl flex-col gap-5 bg-background"
+      className="remove-scrollbar flex w-full max-w-xl flex-col gap-5 bg-background"
     >
       {items.length === 0 && loaded && (
         <>
           <div className="fixed left-1/2 top-32 w-full -translate-x-1/2 cursor-pointer">
             <ClickButtonById
+              onClick={() => {
+                setOpenedModal("import");
+              }}
               id={["importButton", "validateFromJson", "openGenerateWithAi"]}
             >
               <AnimatedGradientText>
@@ -55,8 +60,24 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
             </span>
             <span className="text-center text-foreground/50">
               You can create a new data list either in{" "}
-              <ClickButtonById id="importButton">import </ClickButtonById> page
-              of <ClickButtonById id="newSlideButton"> create </ClickButtonById>
+              <ClickButtonById
+                onClick={() => {
+                  setOpenedModal("import");
+                }}
+                id="importButton"
+              >
+                import{" "}
+              </ClickButtonById>{" "}
+              page of{" "}
+              <ClickButtonById
+                onClick={() => {
+                  setOpenedModal("addSlide");
+                }}
+                id="newSlideButton"
+              >
+                {" "}
+                create{" "}
+              </ClickButtonById>
               page
             </span>
           </div>
@@ -76,7 +97,7 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               key={item.title + item.slideId}
-              className="w-full rounded-xl border p-4 bg-card"
+              className="w-full rounded-xl border bg-card p-4"
             >
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold">{item.title}</h2>
@@ -85,10 +106,10 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
                     onClick={() => {
                       setItems(items.filter((i) => i.title !== item.title));
                     }}
-                    className="cursor-pointer size-8 hover:bg-card-foreground/10 rounded-xl p-1.5 text-lg text-foreground/50 transition-colors hover:text-destructive"
+                    className="size-8 cursor-pointer rounded-xl p-1.5 text-lg text-foreground/50 transition-colors hover:bg-card-foreground/10 hover:text-destructive"
                   />
                   <MdModeEditOutline
-                    className="cursor-pointer size-8 hover:bg-card-foreground/10 rounded-xl p-1.5 text-lg text-foreground/50 transition-colors hover:text-accent"
+                    className="size-8 cursor-pointer rounded-xl p-1.5 text-lg text-foreground/50 transition-colors hover:bg-card-foreground/10 hover:text-accent"
                     onClick={() => setOpenedSlide(i)}
                   />
                 </div>
@@ -138,11 +159,16 @@ export default function List({ items, setItems, setOpenedSlide }: IList) {
 export function ClickButtonById({
   children,
   id,
+  onClick,
 }: {
   id: string | string[];
   children: React.ReactNode;
+  onClick?: () => void;
 }) {
   const handleClick = async () => {
+    if (onClick) {
+      onClick();
+    }
     const idArray = Array.isArray(id) ? id : [id];
     for (const id of idArray) {
       const button = document.getElementById(id);

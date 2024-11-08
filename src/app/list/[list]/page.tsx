@@ -34,6 +34,7 @@ import Link from "next/link";
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import Presentation from "@/components/ui/presentation/duration-selection";
 import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/toast/use-toast";
 
 export default function Page() {
   const {
@@ -208,7 +209,7 @@ export default function Page() {
             <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
               <PopoverTrigger>
                 <Button
-                  variant={"ghost"}
+                  variant={items.length < 3 ? "shine" : "ghost"}
                   id="editList"
                   className="flex items-center justify-start gap-2"
                 >
@@ -327,13 +328,21 @@ function ReorderButton() {
 }
 function PresentationButton({ changeMode }: { changeMode: () => void }) {
   const [mode] = useQueryState("mode");
+  const { items } = useList();
   const [index, setIndex] = useQueryState("i", parseAsInteger);
+  const {toast} = useToast()
   return (
     <>
       <Button
         tooltip={mode === "presenting" ? "Edit list" : "Present list"}
-        className="z-10 flex flex-col"
-        onClick={changeMode}
+        className={`z-10 flex flex-col ${items.length < 3 && 'cursor-not-allowed opacity-75'}`}
+        disabled={items.length < 3}
+        onClick={() => {
+          if (items.length < 3) {
+            toast({ title: "List must contain at least 3 items", variant: "destructive" });
+            return
+          }
+          changeMode()}}
         variant={"ghost"}
       >
         {mode === "presenting" || mode === "running" ? (
