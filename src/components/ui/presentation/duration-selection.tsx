@@ -485,7 +485,7 @@ export default function Presentation() {
                             />
                           )}
                         {currentIntervalData?.currentInterval === index ? (
-                          <p>
+                          <p className="my-2">
                             Time left:{" "}
                             {parseFloat(
                               Number(

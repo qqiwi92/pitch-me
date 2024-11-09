@@ -22,6 +22,8 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useMutation } from "@tanstack/react-query";
+import { Spinner } from "@nextui-org/react";
 
 export default function LoginPage() {
   return (
@@ -64,10 +66,15 @@ function LoginPageSuspense() {
   const [sent, setSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [email, setEmail] = useState("");
+  const mutation = useMutation({
+    mutationKey: ["otp"],
+    mutationFn: ({ f }: { f: FormData }) => login(f),
+  });
+
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       {sent ? (
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md animate-fadeIn">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">
               Magic link sent
@@ -106,7 +113,7 @@ function LoginPageSuspense() {
           </div>
         </Card>
       ) : (
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md animate-fadeIn">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
             <CardDescription>
@@ -131,16 +138,18 @@ function LoginPageSuspense() {
                   <Button variant={"shine"} className="">
                     Log in
                   </Button>
+
                   <button
                     className="absolute inset-0"
                     onClick={async () => {
                       const formData = new FormData();
                       formData.append("email", email);
                       setSent(true);
-                      login(formData);
+                      mutation.mutate({ f: formData });
                     }}
                   ></button>
                 </span>
+                {mutation.isPending && <Spinner className="ml-auto" />}
               </div>
             </form>
           </div>
