@@ -12,18 +12,19 @@ import { Suspense } from "react";
 const montserrat = Montserrat({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "Smoother",
+  title: "pitch-me",
   description:
-    "Make you presentation go smoother. App for preparing for public speeches.",
+    "Make you presentation go swimmingly with pitch-me tool. App for preparing for public speeches.",
+    // "Make you presentation go pitch-me. App for preparing for public speeches.",
   openGraph: {
-    title: "Smoother",
+    title: "pitch-me",
     description:
-      "Make you presentation go smoother. App for preparing for public speeches.",
-    url: "https://smoother.dimalevkin.ru",
-    siteName: "https://smoother.dimalevkin.ru",
+      "Make you presentation go pitch-me. App for preparing for public speeches.",
+    url: "https://pitch-me.dimalevkin.ru",
+    siteName: "https://pitch-me.dimalevkin.ru",
     images: [
       {
-        url: "https://smoother.dimalevkin.ru/og.jpg",
+        url: "https://pitch-me.dimalevkin.ru/og.jpg",
         width: 1000,
         height: 1000,
       },
@@ -32,8 +33,8 @@ export const metadata: Metadata = {
     type: "website",
   },
   keywords: [
-    "smoother",
-    "smoother ai",
+    "pitch-me",
+    "pitch-me ai",
     "ai",
     "presentation",
     "powerpoint",

@@ -38,7 +38,7 @@ export default function Header() {
         className={`${(presentationSettings ?? "").includes("z") && mode === "running" && "opacity-20"} group/header z-[100] flex select-none items-center justify-center gap-2 font-bold leading-tight transition-opacity`}
         draggable={false}
       >
-        <span>smoother!</span>
+        <span>pitch-me!</span>
       </motion.h1>
     </Link>
   );
