@@ -4,10 +4,11 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toast/toaster";
 import QueryProvider from "@/components/utils/providers/queryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import Header from "@/components/ui/header";
 import { ListProvider } from "@/components/utils/providers/listProvider";
+import { Suspense } from "react";
 const montserrat = Montserrat({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
@@ -129,18 +130,20 @@ export default async function RootLayout({
         }
       >
         <QueryProvider>
-          <NuqsAdapter>
-            <ListProvider>
-              <div
-                vaul-drawer-wrapper=""
-                className="remove-scrollbar mx-auto max-w-6xl bg-background px-3 text-foreground"
-              >
-                <Header />
-                {children}
-              </div>
-            </ListProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </NuqsAdapter>
+          <Suspense>
+            <NuqsAdapter>
+              <ListProvider>
+                <div
+                  vaul-drawer-wrapper=""
+                  className="remove-scrollbar mx-auto max-w-6xl bg-background px-3 text-foreground"
+                >
+                  <Header />
+                  <Suspense>{children}</Suspense>
+                </div>
+              </ListProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </NuqsAdapter>
+          </Suspense>
         </QueryProvider>
         <Toaster />
       </body>

@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
 import { line, curveMonotoneX } from "d3-shape";
 import { Slider } from "@/components/ui/slider";
 import { useList } from "@/lib/fetchingList";
@@ -19,10 +25,12 @@ import { Progress } from "../progress";
 import { TextMorph } from "../text-morph";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "../separator";
+import { getCurrentInterval } from "@/lib/presentingSlideData";
 
 export default function Presentation() {
   const { items: slides, setItems: setSlides } = useList();
   const [index, setIndex] = useQueryState("i", parseAsInteger);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const [currentSeconds, setCurrentSeconds] = useQueryState(
     "s",
     parseAsInteger.withDefault(0),
@@ -64,10 +72,10 @@ export default function Presentation() {
   };
   const [presentationSettings, setPresentationSettings] = useQueryState(
     "presentation-settings",
-  ); // d = description, l = list, a = auto swiping
+  ); // d = description, l = list, a = auto swiping, z = zen mode
   useEffect(() => {
     if (!presentationSettings) {
-      setPresentationSettings("dla"); // d = description, l = list, a = auto swiping
+      setPresentationSettings("dlaz"); // d = description, l = list, a = auto swiping
     }
   }, []);
   const handleMouseMove = useCallback(
@@ -134,43 +142,14 @@ export default function Presentation() {
     };
     // eslint-disable-next-line
   }, [mode]);
-  const getCurrentInterval = () => {
-    const currentTimeInSeconds = currentSeconds;
 
-    const intervalInSeconds = slides.reduce(
-      (accumulator: number[], slide, index) => {
-        const currentTimeInSeconds = slide.neededTime * 60; // Convert minutes to seconds
-        const cumulativeTime =
-          (accumulator[index - 1] || 0) + currentTimeInSeconds; // Sum with the previous time
-        accumulator.push(cumulativeTime); // Add the cumulative time to the array
-        return accumulator; // Return the updated accumulator
-      },
-      [],
-    );
-
-    for (let i = 0; i < intervalInSeconds.length; i++) {
-      const start = i === 0 ? 0 : intervalInSeconds[i - 1];
-      const end = intervalInSeconds[i];
-
-      if (currentTimeInSeconds >= start && currentTimeInSeconds < end) {
-        const intervalPassed = currentTimeInSeconds - start;
-        const totalInterval = end - start;
-        const percentagePassed = (intervalPassed / totalInterval) * 100;
-
-        return {
-          currentInterval: i,
-          percentagePassed: percentagePassed.toFixed(2),
-        };
-      }
-    }
-    return null;
-  };
-  const currentIntervalData = getCurrentInterval();
+  const currentIntervalData = getCurrentInterval({ slides, currentSeconds });
 
   useEffect(() => {
-    if (presentationSettings?.includes("a"))
+    if (presentationSettings?.includes("a")) {
       setIndex(currentIntervalData?.currentInterval ?? 0);
-  }, [setIndex]);
+    }
+  }, [setIndex, currentIntervalData?.currentInterval]);
   if (slides.length === 0) {
     setMode("editing");
     return null;
@@ -408,6 +387,34 @@ export default function Presentation() {
                           </p>
                         </label>
                       </div>
+                      <div className="flex cursor-pointer items-center space-x-2">
+                        <Checkbox
+                          id="zen-checkbox"
+                          checked={(presentationSettings ?? "").includes("z")}
+                          onCheckedChange={() => {
+                            if ((presentationSettings ?? "").includes("z")) {
+                              setPresentationSettings(
+                                (presentationSettings ?? "").replace("z", ""),
+                              );
+                            } else {
+                              setPresentationSettings(
+                                (presentationSettings ?? "")
+                                  .replace("z", "")
+                                  .concat("z"),
+                              );
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="zen-checkbox"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          <span className="font-bold">Zen mode </span>
+                          <p className="text-sm text-foreground/75">
+                            Dull the interface when presenting
+                          </p>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -444,7 +451,7 @@ export default function Presentation() {
                 </span>
               )}
             </span>
-            <div className="relative">
+            <div ref={carouselRef} className="relative">
               <Carousel
                 index={index ?? 0}
                 className="animate-fadeIn"
@@ -454,15 +461,16 @@ export default function Presentation() {
                   }
                 }}
               >
-                <CarouselContent className="relative h-full w-full max-w-xs sm:max-w-xl md:max-w-3xl">
+                <CarouselContent className="relative flex w-full max-w-xs items-center justify-start sm:max-w-xl md:max-w-3xl">
                   {slides.map((slide, index) => (
-                    <CarouselItem className="h-full px-2" key={index}>
+                    <CarouselItem className="h-full flex-grow px-2" key={index}>
                       <div
+                        style={{ minHeight: carouselRef.current?.offsetHeight }}
                         key={index}
-                        className={`min-h-[300px] w-full rounded-xl border bg-card transition-all ${mode === "running" ? ((currentIntervalData?.currentInterval ?? 0) > index ? "border-red-400" : (currentIntervalData?.currentInterval ?? 0) < index ? "border-blue-400" : "border-accent") : "border-transparent"} p-3 sm:min-h-[200px]`}
+                        className={`h-full w-full rounded-xl border bg-card transition-all ${mode === "running" ? ((currentIntervalData?.currentInterval ?? 0) > index ? "border-red-400" : (currentIntervalData?.currentInterval ?? 0) < index ? "border-blue-400" : "border-accent") : "border-transparent"} p-3 sm:min-h-[200px]`}
                       >
                         <h4
-                          className={`font-bold ${((presentationSettings ?? "").includes("l") || (presentationSettings ?? "").includes("d")) && "text-4xl"}`}
+                          className={`flex flex-col gap-1 font-bold ${((presentationSettings ?? "").includes("l") || (presentationSettings ?? "").includes("d")) && "text-4xl"}`}
                         >
                           {slide.title}
                           <Separator />

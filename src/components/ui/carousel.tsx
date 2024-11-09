@@ -311,7 +311,7 @@ function CarouselContent({
       }
       className={cn(
         'flex items-center',
-        !disableDrag && 'cursor-grab active:cursor-grabbing',
+        !disableDrag && 'cursor-grab active:cursor-grabbing h-full',
         className
       )}
       ref={containerRef}
@@ -330,7 +330,7 @@ function CarouselItem({ children, className }: CarouselItemProps) {
   return (
     <motion.div
       className={cn(
-        'w-full min-w-0 shrink-0 grow-0 overflow-hidden',
+        'w-full min-w-0 shrink-0 h-full grow-0 overflow-hidden',
         className
       )}
     >

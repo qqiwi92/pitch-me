@@ -3,7 +3,7 @@
 import { createClient } from "@/components/utils/supabase/client";
 import { motion } from "framer-motion";
 import { redirect, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,7 +17,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
           redirect("/login");
         }
       }
-     
     };
 
     checkAuth();
@@ -25,7 +24,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="remove-scrollbar">
-      {children}
+      <Suspense>{children}</Suspense>
 
       <motion.div
         initial={{ opacity: 1 }}

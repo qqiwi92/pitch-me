@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/toast/use-toast";
 import { useQueryState } from "nuqs";
 
 export const useList = () => {
+  
   const queryKey = ["list"];
   const [currentInfo, setCurrentInfo] = useState<List>({
     created_at: "",

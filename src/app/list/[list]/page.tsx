@@ -35,8 +35,10 @@ import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import Presentation from "@/components/ui/presentation/duration-selection";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/toast/use-toast";
+import { getCurrentInterval } from "@/lib/presentingSlideData";
 
 export default function Page() {
+  
   const {
     items,
     isLoading,
@@ -54,6 +56,14 @@ export default function Page() {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [index, setIndex] = useQueryState("i", parseAsInteger);
   const [openedModal, setOpenedModal] = useQueryState("modal", parseAsString);
+  const [presentationSettings, setPresentationSettings] = useQueryState(
+    "presentation-settings",
+  ); // d = description, l = list, a = auto swiping, z = zen mode
+  const currentIntervalData = getCurrentInterval({
+    slides: items,
+    currentSeconds,
+  });
+
   if (isLoading) {
     return (
       <div className="mx-auto mt-24 flex min-h-screen max-w-xl flex-col items-center justify-center gap-5 bg-background">
@@ -124,7 +134,7 @@ export default function Page() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-background py-24">
         <Link
           href={"/"}
-          className="group left-5 top-2 mb-5 mr-auto flex items-center justify-center gap-2 text-xl font-bold underline md:fixed"
+          className={`${(presentationSettings ?? "").includes("z") && mode === "running" && "opacity-20"} group left-5 top-2 mb-5 mr-auto flex items-center justify-center gap-2 text-xl font-bold underline md:fixed`}
         >
           <ChevronLeft
             strokeWidth={4}
@@ -136,43 +146,45 @@ export default function Page() {
         </Link>
         <Presentation />
         <div className="fixed bottom-0 flex w-fit gap-2 overflow-hidden">
-          <div className="overflow-hidden rounded-t-xl border-x border-t">
-            <div className="relative flex gap-2 p-2">
-              <div className="absolute inset-0 bg-opacityToolbarGradient backdrop-blur"></div>
-              <Button
-                tooltip={mode === "running" ? "Stop" : "Start"}
-                className="z-10 flex flex-col"
-                onClick={() => {
-                  if (mode === "running") {
-                    setMode("presenting");
-                  } else {
-                    setMode("running");
-                    setIndex(0);
-                  }
-                }}
-                variant={mode === "running" ? "secondary" : "ghost"}
-              >
-                {mode === "running" ? (
-                  <Pause className="stroke-[2px] text-2xl" />
-                ) : (
-                  <Play className="stroke-[2px] text-2xl" />
-                )}
-              </Button>
-              {mode === "running" && (
+          {index !== -1 && (
+            <div className="overflow-hidden rounded-t-xl border-x border-t">
+              <div className="relative flex gap-2 p-2">
+                <div className="absolute inset-0 bg-opacityToolbarGradient backdrop-blur"></div>
                 <Button
-                  tooltip={"Reset"}
-                  className="z-10 flex animate-fadeIn flex-col"
+                  tooltip={mode === "running" ? "Stop" : "Start"}
+                  className="z-10 flex flex-col"
                   onClick={() => {
-                    setCurrentSeconds(0);
-                    setMode("presenting");
+                    if (mode === "running") {
+                      setMode("presenting");
+                    } else {
+                      setMode("running");
+                      setIndex(currentIntervalData?.currentInterval ?? 0);
+                    }
                   }}
-                  variant={"ghost"}
+                  variant={mode === "running" ? "secondary" : "ghost"}
                 >
-                  <TimerReset className="stroke-[2px] text-2xl" />
+                  {mode === "running" ? (
+                    <Pause className="stroke-[2px] text-2xl" />
+                  ) : (
+                    <Play className="stroke-[2px] text-2xl" />
+                  )}
                 </Button>
-              )}
-            </div>{" "}
-          </div>
+                {mode === "running" && (
+                  <Button
+                    tooltip={"Reset"}
+                    className="z-10 flex animate-fadeIn flex-col"
+                    onClick={() => {
+                      setCurrentSeconds(0);
+                      setMode("presenting");
+                    }}
+                    variant={"ghost"}
+                  >
+                    <TimerReset className="stroke-[2px] text-2xl" />
+                  </Button>
+                )}
+              </div>{" "}
+            </div>
+          )}
           <div className="overflow-hidden rounded-t-xl border-x border-t">
             <div className="relative flex gap-2 p-2">
               <div className="absolute inset-0 bg-opacityToolbarGradient backdrop-blur"></div>
@@ -330,27 +342,33 @@ function PresentationButton({ changeMode }: { changeMode: () => void }) {
   const [mode] = useQueryState("mode");
   const { items } = useList();
   const [index, setIndex] = useQueryState("i", parseAsInteger);
-  const {toast} = useToast()
+  const { toast } = useToast();
   return (
     <>
-      <Button
-        tooltip={mode === "presenting" ? "Edit list" : "Present list"}
-        className={`z-10 flex flex-col ${items.length < 3 && 'cursor-not-allowed opacity-75'}`}
-        disabled={items.length < 3}
-        onClick={() => {
-          if (items.length < 3) {
-            toast({ title: "List must contain at least 3 items", variant: "destructive" });
-            return
-          }
-          changeMode()}}
-        variant={"ghost"}
-      >
-        {mode === "presenting" || mode === "running" ? (
-          <Rows3 className="stroke-[2px] text-2xl" />
-        ) : (
-          <PresentationIcon className="stroke-[2px] text-2xl" />
-        )}
-      </Button>
+      {index !== -1 && (
+        <Button
+          tooltip={mode === "presenting" ? "Edit list" : "Present list"}
+          className={`z-10 flex flex-col ${items.length < 3 && "cursor-not-allowed opacity-75"}`}
+          disabled={items.length < 3}
+          onClick={() => {
+            if (items.length < 3) {
+              toast({
+                title: "List must contain at least 3 items",
+                variant: "destructive",
+              });
+              return;
+            }
+            changeMode();
+          }}
+          variant={"ghost"}
+        >
+          {mode === "presenting" || mode === "running" ? (
+            <Rows3 className="stroke-[2px] text-2xl" />
+          ) : (
+            <PresentationIcon className="stroke-[2px] text-2xl" />
+          )}
+        </Button>
+      )}
       {(mode === "presenting" || mode === "running") && (
         <Button
           tooltip={"Presentation settings"}
