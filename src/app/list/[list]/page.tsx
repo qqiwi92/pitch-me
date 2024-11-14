@@ -207,7 +207,7 @@ export default function Page() {
         <p className="transition group-hover:opacity-95">
           {currentInfo.list_name}
         </p>
-        g
+        
       </Link>
       <List
         setItems={setItems}

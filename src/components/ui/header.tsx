@@ -35,7 +35,7 @@ export default function Header() {
           paddingTop: textSizeLinear,
           paddingBottom: textSizeLinear.get() - 1,
         }}
-        className={`${(presentationSettings ?? "").includes("z") && mode === "running" && "opacity-20"} group/header z-[100] flex select-none items-center justify-center gap-2 font-bold leading-tight transition-opacity`}
+        className={`${(presentationSettings ?? "").includes("z") && mode === "running" && "opacity-20"} group/header z-[100] text-nowrap flex select-none items-center justify-center gap-2 font-bold leading-tight transition-opacity`}
         draggable={false}
       >
         <span>pitch-me!</span>
