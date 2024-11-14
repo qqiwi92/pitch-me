@@ -22,15 +22,5 @@ export default function Template({ children }: { children: React.ReactNode }) {
     checkAuth();
   }, [pathname]);
 
-  return (
-    <div className="remove-scrollbar">
-      <Suspense>{children}</Suspense>
-
-      <motion.div
-        initial={{ opacity: 1 }}
-        className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 bg-background"
-        animate={{ opacity: 0 }}
-      />
-    </div>
-  );
+  return <div className="remove-scrollbar animate-fadeIn">{children}</div>;
 }

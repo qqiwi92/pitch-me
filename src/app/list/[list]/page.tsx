@@ -38,7 +38,6 @@ import { useToast } from "@/components/ui/toast/use-toast";
 import { getCurrentInterval } from "@/lib/presentingSlideData";
 
 export default function Page() {
-  
   const {
     items,
     isLoading,
@@ -208,6 +207,7 @@ export default function Page() {
         <p className="transition group-hover:opacity-95">
           {currentInfo.list_name}
         </p>
+        g
       </Link>
       <List
         setItems={setItems}
@@ -234,12 +234,15 @@ export default function Page() {
                   setIsPopoverOpen(false);
                 }}
               >
-                <OpenAddSlideButton setOpenedSlide={setOpenedSlide} />
+                <OpenAddSlideButton
+                  shouldShine={items.length < 3}
+                  setOpenedSlide={setOpenedSlide}
+                />
                 <span onClick={() => setOpenedModal("reorder")}>
-                  <ReorderButton />
+                  <ReorderButton  />
                 </span>
                 <span onClick={() => setOpenedModal("export")}>
-                  <OpenExportButton />
+                  <OpenExportButton shouldShine={items.length < 3} />
                 </span>
                 <span onClick={() => setOpenedModal("import")}>
                   <OpenImportButton />
@@ -285,8 +288,10 @@ export default function Page() {
 
 function OpenAddSlideButton({
   setOpenedSlide,
+  shouldShine = false,
 }: {
   setOpenedSlide: React.Dispatch<React.SetStateAction<number>>;
+  shouldShine?: boolean;
 }) {
   return (
     <Button
@@ -294,7 +299,7 @@ function OpenAddSlideButton({
       onClick={() => setOpenedSlide(-1)}
       // tooltip="Create a new slide"
       className="flex items-center justify-start gap-2 px-2"
-      variant={"ghost"}
+      variant={shouldShine ? "shine" : "ghost"}
     >
       <CiCirclePlus className="size-5 stroke-[1px] text-2xl" />
       <span>add</span>
@@ -314,12 +319,12 @@ function OpenImportButton() {
     </Button>
   );
 }
-function OpenExportButton() {
+function OpenExportButton({ shouldShine }: { shouldShine?: boolean }) {
   return (
     <Button
       // tooltip="Export"
       className="flex items-center justify-start gap-2 px-2"
-      variant={"ghost"}
+      variant={shouldShine ? "shine" : "ghost"}
     >
       <CiExport className="size-5 stroke-[1px] text-2xl" />
       <span>export</span>

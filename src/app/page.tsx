@@ -1,3 +1,4 @@
+
 import { createClient } from "@/components/utils/supabase/server";
 import { redirect } from "next/navigation";
 import ClientPage from "./clientPage";

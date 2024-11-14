@@ -115,7 +115,6 @@ export default function ClientPage({ user }: { user: User }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-3">
       <Coolshape type="moon" />
-
       <div className={`flex flex-col items-center justify-center gap-3`}>
         {isPending ? (
           <div className="flex flex-col gap-4">
@@ -146,7 +145,7 @@ export default function ClientPage({ user }: { user: User }) {
               className="relative mb-2 max-h-20 bg-card h-fit flex size-full w-64 justify-between gap-3 overflow-hidden rounded-xl border hover:bg-background px-3 py-2 transition-all hover:border-primary"
             >
               <Link
-                href={`/list/${list.list_id}`}
+                href={`/list/${list.list_id}`} 
                 className="absolute bottom-0 left-0 right-0 top-0"
               >
                 {" "}

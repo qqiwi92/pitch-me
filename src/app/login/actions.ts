@@ -30,7 +30,6 @@ export async function verifyOtp(formData: FormData) {
     token: otp,
     type: "email",
   });
-  console.log(data, error);
   if (error?.code === "otp_expired") {
     redirect("/login?t=otp_expired");
   }
