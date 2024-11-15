@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/components/utils/supabase/server";
+import { extractFirstCodeBlock } from "@/lib/generateSchema";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createClient as createNewClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
@@ -12,6 +14,9 @@ async function checkAuth() {
     redirect("/login");
   }
 }
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_KEY ?? "");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 async function supabaseFetch(
   endpoint: string,
   method: "GET" | "POST" | "DELETE" = "GET",
@@ -53,3 +58,23 @@ export async function getQuizes() {
   await checkAuth();
   return await supabaseFetch("quizes", "GET");
 }
+
+export const generateListAi = async ({ prompt }: { prompt: string }) => {
+  await checkAuth();
+  const result = await model.generateContent(
+    `Generate a list based on the following prompt. Return the result as a JSON array of this structure  {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  explanation: string;
+} : ${prompt}`,
+  );
+  const text = result.response.text();
+  const extracted = await extractFirstCodeBlock(text.trim());
+  if (extracted === "no code") return [];
+  const list = await JSON.parse(extracted);
+  // const list = JSON.parse(await extractFirstCodeBlock(text));
+
+  return list;
+};

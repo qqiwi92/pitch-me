@@ -22,7 +22,7 @@ export default async function generateSchema(
     const response = await model.generateContent([prompt]);
     const resultText = response.response.text();
 
-    const result = extractFirstCodeBlock(resultText);
+    const result = await extractFirstCodeBlock(resultText);
     if (result === "no code") {
       return {
         status: "error",
@@ -49,7 +49,7 @@ export default async function generateSchema(
   }
 }
 
-function extractFirstCodeBlock(text: string): string {
+export async function extractFirstCodeBlock(text: string): Promise<string> {
   const pattern = /```json(.*?)```/s;
   const match = text.match(pattern);
 

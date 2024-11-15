@@ -39,6 +39,7 @@ import { useToast } from "@/components/ui/toast/use-toast";
 import { createClient } from "@/components/utils/supabase/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getQuizes, createQuiz, deleteQuiz } from "./fetch-actions";
+import AIListCreator from "./ai_list_creator";
 
 interface Question {
   id: string;
@@ -204,15 +205,15 @@ export default function QuizCreator() {
   return (
     <div className="container mx-auto p-4">
       <motion.h1
-        className="mb-4 flex items-center justify-center text-2xl font-bold"
+        className="mb-4 flex items-center justify-between text-2xl font-bold"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Animated Quiz Creator
+        Quiz Creator
         <Dialog>
           <DialogTrigger className="ml-6" asChild>
-            <Button variant="outline">Edit Profile</Button>
+            <Button variant="outline">see lists</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -242,11 +243,10 @@ export default function QuizCreator() {
                 </div>
               ))}
             </div>
-            <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
+            <DialogFooter></DialogFooter>
           </DialogContent>
         </Dialog>
+        <AIListCreator onListCreated={(list) => setQuiz(list)} />
       </motion.h1>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -267,6 +267,7 @@ export default function QuizCreator() {
                   id="question"
                   value={currentQuestion.question}
                   onChange={handleQuestionChange}
+                  className="bg-background"
                   placeholder="Enter your question"
                 />
               </div>
@@ -279,6 +280,7 @@ export default function QuizCreator() {
                 >
                   <Label htmlFor={`option-${index}`}>Option {index + 1}</Label>
                   <Input
+                    className="bg-background"
                     id={`option-${index}`}
                     value={option}
                     onChange={(e) => handleOptionChange(index, e)}
@@ -347,13 +349,13 @@ export default function QuizCreator() {
       >
         Current Quiz
       </motion.h2>
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         {quiz.map((q, index) => (
           <motion.div
             key={q.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, scale: 0.7 }}
             transition={{ duration: 0.3 }}
             layout
           >
@@ -428,14 +430,14 @@ export default function QuizCreator() {
           transition={{ duration: 0.5 }}
         >
           <Button
-            onClick={() =>{
-              createQuizMutation.mutate({ quiz: JSON.stringify(quiz) })
-              setQuiz([])
+            onClick={() => {
+              createQuizMutation.mutate({ quiz: JSON.stringify(quiz) });
+              setQuiz([]);
               toast({
                 variant: "success",
                 title: "Quiz uploaded successfully",
-              })}
-            }
+              });
+            }}
           >
             upload
           </Button>
